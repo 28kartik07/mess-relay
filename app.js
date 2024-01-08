@@ -10,6 +10,10 @@ app.route("/")
     res.render("home.ejs");
 });
 
+app.route("/login")
+.get(function(req,res){
+    res.render("login.ejs");
+});
 
 app.listen("3000",function(req,res){
     console.log("server started");
