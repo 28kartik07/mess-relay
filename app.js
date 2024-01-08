@@ -15,6 +15,11 @@ app.route("/login")
     res.render("login.ejs");
 });
 
+app.route("/signup")
+.get(function(req,res){
+    res.render("signup.ejs");
+});
+
 app.listen("3000",function(req,res){
     console.log("server started");
 });
