@@ -51,12 +51,31 @@
   justify-content: space-around;
   height: 25%;
 }
+
 .lower
 {
   height: 75%;
 }
-.uppercontent
-{
+
+.uppercontent{
   width: 10rem;
   text-align: center;
 }
+
+.area{
+  margin-left: 15rem;
+  height: 10rem;
+  width: 50%;
+}
+
+.submit{
+  margin-left: 20rem;
+  background-color:wheat;
+}
+
+.comment{
+  margin-left: 20rem;
+  background-color:bisque;
+  width: 15%;
+}
+
