@@ -1,13 +1,13 @@
 .contain{
     position: relative;
 }
-
+/* 
 .image{
   display:  block;
-  margin-left: auto;
+  margin-left: 0;
   margin-right: auto;
-  width: 50%;
-}
+  width: 70%;
+} */
 
 .block{
     position: absolute;
