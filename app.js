@@ -20,6 +20,11 @@ app.route("/signup")
     res.render("signup.ejs");
 });
 
+app.route("/profile")
+.get(function(req,res){
+    res.render("profile.ejs");
+});
+
 app.listen("3000",function(req,res){
     console.log("server started");
 });
