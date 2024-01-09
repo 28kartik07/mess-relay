@@ -29,3 +29,34 @@
     width: 4rem;
     margin-left: 6rem;
 }
+
+.main
+{
+    display: flex;
+    flex-direction: row;
+    height: 31.1rem;
+}
+.left
+{
+    width: 15%;
+}
+.right
+{
+    width: 85%;
+}
+.upper
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  height: 25%;
+}
+.lower
+{
+  height: 75%;
+}
+.uppercontent
+{
+  width: 10rem;
+  text-align: center;
+}
