@@ -1,10 +1,31 @@
 const express = require("express");
 const bodyparser = require("body-parser");
+const mongoose=require("mongoose");
+
+mongoose.connect("mongodb+srv://ayush2022ca016:ayush2022ca016@cluster0.4vonwx6.mongodb.net/?retryWrites=true&w=majority").then(()=>console.log("mongo connected")).catch(err=>console.log(err));
 const app = express();
+
+const userschema=new mongoose.Schema({
+    email : String,
+    password : String,
+    role : String,
+    tcomplaint : Number
+});
+
+const usermodel=mongoose.model("messrecord",userschema);
 
 app.use(bodyparser.urlencoded({extended:true}));    
 app.set('view-engine','ejs');
 app.use(express.static('public'));
+
+const user = new usermodel({
+    email : "ayush@mail.com",
+    password : "12334",
+    role : "student",
+    tcomplaint : 12
+});
+
+user.save();
 
 app.route("/")
 .get(function(req,res){
@@ -24,10 +45,9 @@ app.route("/signup")
 app.route("/profile")
 .get(function(req,res){
     res.render("profile.ejs");
-});
-
-app.post('/profile',function(req,res){
-    var i=req.body;
+})
+.post(function(req,res){
+    var i=req.body.message;
     console.log(i);
     res.redirect('/profile')
 });

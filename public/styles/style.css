@@ -33,7 +33,6 @@
 .main
 {
     display: flex;
-    flex-direction: row;
     height: 31.1rem;
 }
 .left
