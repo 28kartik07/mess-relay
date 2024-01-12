@@ -25,7 +25,7 @@ const user = new usermodel({
     tcomplaint : 12
 });
 
-user.save();
+// user.save();
 
 app.route("/")
 .get(function(req,res){
@@ -35,11 +35,26 @@ app.route("/")
 app.route("/login")
 .get(function(req,res){
     res.render("login.ejs");
+})
+.post(function(req,res){
+    const user=req.body.email;
+    const pass=req.body.password;
+    console.log(user,pass);
+    res.redirect('/login');
 });
 
 app.route("/signup")
 .get(function(req,res){
     res.render("signup.ejs");
+})
+.post(function(req,res){
+    const name=req.body.name;
+    const email=req.body.email;
+    const registration=req.body.registration;
+    const password=req.body.password;
+    const hostel=req.body.hostel;
+    console.log(name,email,registration,password,hostel);
+    res.redirect('/signup');
 });
 
 app.route("/profile")
