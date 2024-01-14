@@ -56,7 +56,10 @@ const complaintschema = new  mongoose.Schema({
     userid : mongoose.Types.ObjectId,
     username : String,
     complaint : String,
-    status : String
+    status : {
+        type : String,
+        default : "not done"
+    }
 });
 const complaintmodel = mongoose.model("complaints",complaintschema);
 
@@ -126,8 +129,16 @@ app
     }
   })
   .post(function (req, res) {
-    var i = req.body.message;
-    console.log(i);
+    var comp = req.body.message;
+    var id = req.user._id;
+    var name = req.user.username;
+
+    const c = new complaintmodel({
+        userid : id,
+        username : name,
+        complaint : comp,
+    });
+    c.save();
     res.redirect("/profile");
   });
 
