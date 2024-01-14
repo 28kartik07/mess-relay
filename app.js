@@ -52,6 +52,14 @@ passport.deserializeUser(usermodel.deserializeUser());
 
 passport.use(usermodel.createStrategy());
 
+const complaintschema = new mongoose.Schema({
+  userid: mongoose.Types.ObjectId,
+  username: String,
+  complaint: String,
+  status: String,
+});
+const complaintmodel = mongoose.model("complaints", complaintschema);
+
 app.route("/").get(function (req, res) {
   res.render("home.ejs");
 });
@@ -101,7 +109,9 @@ app
           console.log(err);
           res.redirect("/signup");
         } else {
-          res.redirect("/login");
+          passport.authenticate("local")(req, res, function () {
+            res.redirect("/login");
+          });
         }
       }
     );
