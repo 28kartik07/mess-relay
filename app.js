@@ -4,7 +4,6 @@ const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
-// const LocalStrategy = require("passport-local").Strategy;
 const passportlocalmongoose = require("passport-local-mongoose");
 
 const app = express();
@@ -44,11 +43,19 @@ userschema.plugin(passportlocalmongoose);
 
 const usermodel = mongoose.model("messrecord", userschema);
 
-// passport.use(new LocalStrategy(usermodel.authenticate()));
 passport.serializeUser(usermodel.serializeUser());
 passport.deserializeUser(usermodel.deserializeUser());
 
 passport.use(usermodel.createStrategy());
+
+const complaintschema = new  mongoose.Schema({
+    userid : mongoose.Types.ObjectId,
+    username : String,
+    complaint : String,
+    status : String
+});
+const complaintmodel = mongoose.model("complaints",complaintschema);
+
 
 app.route("/").get(function (req, res) {
   res.render("home.ejs");
@@ -104,9 +111,7 @@ app
           console.log(err);
           res.redirect("/signup");
         } else {
-          passport.authenticate("local")(req, res, function () {
             res.redirect("/login");
-          });
         }
       }
     );
