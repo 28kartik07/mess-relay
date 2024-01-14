@@ -49,13 +49,6 @@ passport.serializeUser(usermodel.serializeUser());
 passport.deserializeUser(usermodel.deserializeUser());
 
 passport.use(usermodel.createStrategy());
-// passport.serializeUser(function (usermodel, done) {
-//   done(null, usermodel);
-// });
-
-// passport.deserializeUser(function (usermodel, done) {
-//   done(null, usermodel);
-// });
 
 app.route("/").get(function (req, res) {
   res.render("home.ejs");
@@ -63,20 +56,14 @@ app.route("/").get(function (req, res) {
 
 app.route("/login")
   .get(function (req, res) {
-    res.render("login.ejs");
+    res.render("login.ejs",{error : ""});
   })
-  // app.post('/login', passport.authenticate('local', {
-  //   successRedirect: '/profile',
-  //   failureRedirect: '/login',
-  //   failureFlash: true, // Enable flash messages for failure
-  // }));
   .post(function (req, res) {
     const user = new usermodel({
       username: req.body.username,
       password: req.body.password,
     });
 
-    // console.log(username, password);
     req.login(user, function (err) {
       if (err) {
         console.log(err);
@@ -87,8 +74,7 @@ app.route("/login")
                 console.log(err);
             if(!user)
             {
-                // const error = "Invalid User ID or Password";
-                res.render("login",{kartik: "Invalid User ID or Password"});
+                res.render("login.ejs",{error: "Invalid User ID or Password"});
             }
             else    
                 res.redirect("/profile");
@@ -132,7 +118,7 @@ app
     if (req.isAuthenticated()) {
       res.render("profile.ejs");
     } else {
-      res.redirect("/login");
+        res.render("login.ejs",{error: "Login To View Profile"});
     }
   })
   .post(function (req, res) {
