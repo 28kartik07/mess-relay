@@ -37,6 +37,10 @@ const userschema = new mongoose.Schema({
   name: String,
   hostel: String,
   gender: String,
+  tcomplaint: {
+    type: Number,
+    default: 0,
+  },
 });
 
 userschema.plugin(passportlocalmongoose);
@@ -61,9 +65,10 @@ app.route("/").get(function (req, res) {
   res.render("home.ejs");
 });
 
-app.route("/login")
+app
+  .route("/login")
   .get(function (req, res) {
-    res.render("login.ejs",{error : ""});
+    res.render("login.ejs", { error: "" });
   })
   .post(function (req, res) {
     const user = new usermodel({
@@ -74,19 +79,13 @@ app.route("/login")
     req.login(user, function (err) {
       if (err) {
         console.log(err);
-      }
-      else {
-        passport.authenticate("local",function(err,user,info){
-            if(err)
-                console.log(err);
-            if(!user)
-            {
-                res.render("login.ejs",{error: "Invalid User ID or Password"});
-            }
-            else    
-                res.redirect("/profile");
-        })(req,res);
-      
+      } else {
+        passport.authenticate("local", function (err, user, info) {
+          if (err) console.log(err);
+          if (!user) {
+            res.render("login.ejs", { error: "Invalid User ID or Password" });
+          } else res.redirect("/profile");
+        })(req, res);
       }
     });
   });
@@ -111,7 +110,7 @@ app
           console.log(err);
           res.redirect("/signup");
         } else {
-            res.redirect("/login");
+          res.redirect("/login");
         }
       }
     );
@@ -123,7 +122,7 @@ app
     if (req.isAuthenticated()) {
       res.render("profile.ejs");
     } else {
-        res.render("login.ejs",{error: "Login To View Profile"});
+      res.render("login.ejs", { error: "Login To View Profile" });
     }
   })
   .post(function (req, res) {

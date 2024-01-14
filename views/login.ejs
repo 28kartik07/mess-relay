@@ -5,11 +5,14 @@
       <div class="col col-md-8 col-lg-8">
         <div class="card" style="border-radius: 1rem">
           <div class="row g-5">
-            <div class="col-md-6 d-none d-md-block">
+            <div
+              class="col-md-6 d-none d-md-block"
+              style="background-color: #ffe4de"
+            >
               <img
                 src="images/login.png"
                 alt="login form"
-                class="img-fluid login-image"
+                class="img-fluid login-image object-fit-contain rounded"
               />
             </div>
             <div class="col-md-5">
@@ -20,14 +23,17 @@
                       class="fas fa-cubes fa-lg me-2"
                       style="color: #ff6219"
                     ></i>
-                    <span class="h2 fw-bold mb-0"
+                    <!-- <span class="h2 fw-bold mb-0"
                       ><img class="logo" src="images/angry-customer.png"
-                    /></span>
+                    /></span> -->
                   </div>
 
-                  <h5 class="fw-normal mb-2 pb-2" style="letter-spacing: 1px">
-                    Sign into your account
-                  </h5>
+                  <h3
+                    class="fw-normal mb-2 pb-2"
+                    style="letter-spacing: 1px; margin-left: 4rem"
+                  >
+                    Sign In
+                  </h3>
 
                   <div class="form-outline mb-3">
                     <input
@@ -67,10 +73,9 @@
                     <button class="btn btn-dark btn-lg btn-block" type="submit">
                       Login
                     </button>
-                    
                   </div>
-                  <p style="color: red;"> <%= error %> </p>
-                  
+                  <p style="color: red"><%= error %></p>
+
                   <a class="small text-muted" href="#!">Forgot password?</a>
                   <p class="mb-3 pb-lg-1" style="color: #393f81">
                     Don't have an account?
