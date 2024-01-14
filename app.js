@@ -61,8 +61,7 @@ app.route("/").get(function (req, res) {
   res.render("home.ejs");
 });
 
-app
-  .route("/login")
+app.route("/login")
   .get(function (req, res) {
     res.render("login.ejs");
   })
@@ -81,10 +80,20 @@ app
     req.login(user, function (err) {
       if (err) {
         console.log(err);
-      } else {
-        passport.authenticate("local")(req, res, function () {
-          res.redirect("/profile");
-        });
+      }
+      else {
+        passport.authenticate("local",function(err,user,info){
+            if(err)
+                console.log(err);
+            if(!user)
+            {
+                // const error = "Invalid User ID or Password";
+                res.render("login",{kartik: "Invalid User ID or Password"});
+            }
+            else    
+                res.redirect("/profile");
+        })(req,res);
+      
       }
     });
   });
