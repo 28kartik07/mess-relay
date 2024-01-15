@@ -61,6 +61,7 @@ const complaintschema = new mongoose.Schema({
     default: "not done",
   },
 });
+
 const complaintmodel = mongoose.model("complaints", complaintschema);
 
 app.route("/").get(function (req, res) {
@@ -118,10 +119,33 @@ app
     );
   });
 
+var cmp = [];
+
 app
   .route("/profile")
   .get(function (req, res) {
     if (req.isAuthenticated()) {
+      // res.redirect("/prfile");
+      var id = req.user._id;
+      async function accessCollection2WithQuery() {
+        try {
+          const dataFromCollection2 = await complaintmodel.find({
+            userid: id,
+          });
+          for (const obj of dataFromCollection2) {
+            cmp.push(obj.complaint);
+            // console.log(obj.complaint);
+          }
+          // console.log(cmp);
+          // console.log("Data from Collection2:", dataFromCollection2);
+        } catch (error) {
+          console.error("Error accessing Collection2:", error);
+        }
+      }
+
+      console.log(cmp);
+      accessCollection2WithQuery();
+
       res.render("profile.ejs");
     } else {
       res.render("login.ejs", { error: "Login To View Profile" });
@@ -131,16 +155,18 @@ app
     var comp = req.body.message;
     var id = req.user._id;
     var name = req.user.username;
-
     const c = new complaintmodel({
       userid: id,
       username: name,
       complaint: comp,
     });
+
+    // let dataFromCollection2 = [];
+    // console.log(dataFromCollection2);
+
     c.save();
     res.redirect("/profile");
   });
-
 app.listen("3000", function (req, res) {
   console.log("server started");
 });
