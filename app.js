@@ -125,28 +125,28 @@ app
   .route("/profile")
   .get(function (req, res) {
     if (req.isAuthenticated()) {
-      // res.redirect("/prfile");
       var id = req.user._id;
       async function accessCollection2WithQuery() {
         try {
           const dataFromCollection2 = await complaintmodel.find({
             userid: id,
           });
-          for (const obj of dataFromCollection2) {
-            cmp.push(obj.complaint);
-            // console.log(obj.complaint);
+          if (cmp.length === 0) {
+            for (const obj of dataFromCollection2) {
+              cmp.push(obj.complaint);
+              // console.log(obj.complaint);
+            }
           }
-          // console.log(cmp);
+          console.log(cmp);
+          res.render("profile.ejs");
           // console.log("Data from Collection2:", dataFromCollection2);
         } catch (error) {
           console.error("Error accessing Collection2:", error);
         }
       }
 
-      console.log(cmp);
+      // console.log(cmp);
       accessCollection2WithQuery();
-
-      res.render("profile.ejs");
     } else {
       res.render("login.ejs", { error: "Login To View Profile" });
     }
@@ -167,6 +167,7 @@ app
     c.save();
     res.redirect("/profile");
   });
+
 app.listen("3000", function (req, res) {
   console.log("server started");
 });
