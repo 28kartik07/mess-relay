@@ -126,27 +126,14 @@ app
   .get(function (req, res) {
     if (req.isAuthenticated()) {
       var id = req.user._id;
-      async function accessCollection2WithQuery() {
-        try {
-          const dataFromCollection2 = await complaintmodel.find({
-            userid: id,
-          });
-          if (cmp.length === 0) {
-            for (const obj of dataFromCollection2) {
-              cmp.push(obj.complaint);
-              // console.log(obj.complaint);
-            }
-          }
-          console.log(cmp);
-          res.render("profile.ejs");
-          // console.log("Data from Collection2:", dataFromCollection2);
-        } catch (error) {
-          console.error("Error accessing Collection2:", error);
-        }
-      }
+      complaintmodel.find({ userid: id })
+      .then(data => {
+          res.render('profile.ejs', { complaints: data });
+      })
+      .catch(error => {
+          console.error(error);
+      });
 
-      // console.log(cmp);
-      accessCollection2WithQuery();
     } else {
       res.render("login.ejs", { error: "Login To View Profile" });
     }

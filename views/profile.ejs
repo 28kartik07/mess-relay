@@ -19,6 +19,17 @@
                     <br><br>
                     <input class="submit" type="submit">
                 </form>
+                <p>
+                    <% if (complaints && complaints.length > 0) { %>
+                        <ul>
+                            <% complaints.forEach(complaint => { %>
+                                <li><%= complaint.complaint %></li>
+                            <% }); %>
+                        </ul>
+                    <% } else { %>
+                        <p>No complaints found.</p>
+                    <% } %>
+                </p>
             </div>
         </div>
     </div>
