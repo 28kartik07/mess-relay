@@ -152,6 +152,12 @@ app
     }
   })
   .post(function (req, res) {
+    var id = req.user._id;
+    usermodel.updateOne({_id : id},{$inc:{tcomplaint : 1}}).then(result => {
+      if(!result)
+        console.log("not updated");
+    });
+
     var comp = req.body.message;
     var id = req.user._id;
     var name = req.user.username;
