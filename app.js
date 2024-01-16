@@ -37,10 +37,14 @@ const userschema = new mongoose.Schema({
   name: String,
   hostel: String,
   gender: String,
+  role: {
+    type : String,
+    default : "Student"
+  },
   tcomplaint: {
     type: Number,
     default: 0,
-  },
+  }
 });
 
 userschema.plugin(passportlocalmongoose);
@@ -56,10 +60,18 @@ const complaintschema = new mongoose.Schema({
   userid: mongoose.Types.ObjectId,
   username: String,
   complaint: String,
+  upvote : {
+    type: Number,
+    default: 0,
+  },
+  downvote : {
+    type: Number,
+    default: 0,
+  },
   status: {
     type: String,
     default: "not done",
-  },
+  }
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
@@ -126,6 +138,7 @@ app
     res.render("signup.ejs");
   })
   .post(function (req, res) {
+  
     usermodel.register(
       {
         username: req.body.username,
@@ -178,3 +191,16 @@ app.route("/profile").get(function (req, res) {
 app.listen("3000", function (req, res) {
   console.log("server started");
 });
+
+
+
+
+// const u = new usermodel({
+//   username: "gore@gmail.com",
+//   name: "MM Gore",
+//   registration: "xxxx",
+//   hostel: "raman",
+//   gender: "male",
+//   role:"warden"
+// });
+// u.save();

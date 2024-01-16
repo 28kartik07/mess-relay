@@ -30,7 +30,7 @@
 
 .main {
   display: flex;
-  /* height: 31.1rem; */
+  height: 31.1rem;
 }
 .left {
   width: 15%;
