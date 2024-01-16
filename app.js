@@ -96,6 +96,31 @@ app
   });
 
 app
+  .route("/complaint")
+  .get(function (req, res) {
+    res.render("complaint.ejs");
+  })
+  .post(function (req, res) {
+    var id = req.user._id;
+    usermodel
+      .updateOne({ _id: id }, { $inc: { tcomplaint: 1 } })
+      .then((result) => {
+        if (!result) console.log("not updated");
+      });
+
+    var comp = req.body.message;
+    var name = req.user.username;
+    const c = new complaintmodel({
+      userid: id,
+      username: name,
+      complaint: comp,
+    });
+
+    c.save();
+    res.redirect("/profile");
+  });
+
+app
   .route("/signup")
   .get(function (req, res) {
     res.render("signup.ejs");
@@ -133,37 +158,22 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app
-  .route("/profile")
-  .get(function (req, res) {
-    if (req.isAuthenticated()) {
-      var id = req.user._id;
-      islogged = true;
-      complaintmodel
-        .find({ userid: id })
-        .then((data) => {
-          res.render("profile.ejs", { complaints: data, islogged });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      res.render("login.ejs", { error: "Login To View Profile" });
-    }
-  })
-  .post(function (req, res) {
-    var comp = req.body.message;
+app.route("/profile").get(function (req, res) {
+  if (req.isAuthenticated()) {
     var id = req.user._id;
-    var name = req.user.username;
-    const c = new complaintmodel({
-      userid: id,
-      username: name,
-      complaint: comp,
-    });
-
-    c.save();
-    res.redirect("/profile");
-  });
+    islogged = true;
+    complaintmodel
+      .find({ userid: id })
+      .then((data) => {
+        res.render("profile.ejs", { complaints: data, islogged });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } else {
+    res.render("login.ejs", { error: "Login To View Profile" });
+  }
+});
 
 app.listen("3000", function (req, res) {
   console.log("server started");
