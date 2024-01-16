@@ -65,8 +65,10 @@ const complaintschema = new mongoose.Schema({
 const complaintmodel = mongoose.model("complaints", complaintschema);
 
 app.route("/").get(function (req, res) {
-  res.render("home.ejs");
+  res.render("home.ejs", { islogged });
 });
+
+let islogged = false;
 
 app
   .route("/login")
@@ -119,21 +121,32 @@ app
     );
   });
 
-var cmp = [];
+app.get("/logout", (req, res) => {
+  // Destroy the session to log out the user
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.redirect("/login"); // Redirect to the login page after logout
+    }
+  });
+});
 
 app
   .route("/profile")
   .get(function (req, res) {
     if (req.isAuthenticated()) {
       var id = req.user._id;
-      complaintmodel.find({ userid: id })
-      .then(data => {
-          res.render('profile.ejs', { complaints: data });
-      })
-      .catch(error => {
+      islogged = true;
+      complaintmodel
+        .find({ userid: id })
+        .then((data) => {
+          res.render("profile.ejs", { complaints: data, islogged });
+        })
+        .catch((error) => {
           console.error(error);
-      });
-
+        });
     } else {
       res.render("login.ejs", { error: "Login To View Profile" });
     }
@@ -147,9 +160,6 @@ app
       username: name,
       complaint: comp,
     });
-
-    // let dataFromCollection2 = [];
-    // console.log(dataFromCollection2);
 
     c.save();
     res.redirect("/profile");

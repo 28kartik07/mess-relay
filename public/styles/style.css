@@ -1,5 +1,5 @@
-.contain{
-    position: relative;
+.contain {
+  position: relative;
 }
 /* 
 .image{
@@ -9,72 +9,79 @@
   width: 70%;
 } */
 
-.block{
-    position: absolute;
-    bottom: 20px;
+.block {
+  position: absolute;
+  bottom: 20px;
   right: 20px;
   background-color: black;
   color: white;
   padding-left: 20px;
   padding-right: 20px;
 }
-.login-image
-{
-    border-radius: 1rem 0 0 1rem;
-    height: 100%;
+.login-image {
+  border-radius: 1rem 0 0 1rem;
+  height: 100%;
 }
-.logo
-{
-    height: 2rem;
-    width: 2rem;
-    margin-right: 1rem;
+.logo {
+  height: 2rem;
+  width: 2rem;
+  margin-right: 1rem;
 }
 
-.main
-{
-    display: flex;
-    height: 31.1rem;
-}
-.left
-{
-    width: 15%;
-}
-.right
-{
-    width: 85%;
-}
-.upper
-{
+.main {
   display: flex;
+  /* height: 31.1rem; */
+}
+.left {
+  width: 15%;
+  background-color: rgb(250, 238, 222);
+}
+.right {
+  width: 85%;
+}
+.upper {
+  display: flex;
+  background-color: silver;
   flex-direction: row;
   justify-content: space-around;
   height: 25%;
 }
 
-.lower
-{
+.lower {
   height: 75%;
 }
 
-.uppercontent{
+.uppercontent {
   width: 10rem;
   text-align: center;
 }
 
-.area{
+.area {
   margin-left: 15rem;
   height: 10rem;
   width: 50%;
+  padding: 3px;
 }
 
-.submit{
-  margin-left: 20rem;
-  background-color:wheat;
+.side {
+  height: 2.5rem;
+  font-size: large;
+  padding: 1rem;
+  /* margin-left: 1rem; */
+  /* margin: 1rem 1rem 0 0; */
 }
 
-.comment{
+.submit {
   margin-left: 20rem;
-  background-color:bisque;
+  background-color: wheat;
+  /* margin-bottom: 3rem; */
+  padding: 3px;
+}
+
+.comment {
+  margin-left: 20rem;
+  padding: 2px;
+  font-size: large;
+  background-color: bisque;
   width: 15%;
 }
-
