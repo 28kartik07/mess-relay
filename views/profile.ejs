@@ -26,18 +26,22 @@
             </div>
             <div class="lower">
                 <p>your complaints</p>
-                <div class="complaint">
                     <% if (complaints.length > 0) { %>
                             <% complaints.forEach(complaint => { %>
-                                <div class="newcomplaint"><%= complaint.complaint %></div>
-                                <div><%= complaint.upvote %></div>
-                                <div><%= complaint.downvote %></div>
+                            <div class="complaints">
+                                <div class="newcomplaint">
+                                    <h4><%= complaint.complaint %></h4>
+                                </div>
+                                <div class="vote">
+                                    <div><img class="thumb" src="images/like.png"><h5><%= complaint.upvote %></h5></div>
+                                    <div><img class="thumb" src="images/dislike.png"><h5><%= complaint.downvote %></h5></div>
+                                </div>
+                            </div>
                             <% }); %>
                     <% } else { %>
                         <p>No complaints found.</p>
                     <% } %>
-                </div>
-    
+
             </div>
         </div>
     </div>

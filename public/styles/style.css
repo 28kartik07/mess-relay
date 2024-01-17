@@ -44,7 +44,7 @@
   background-color: silver;
   flex-direction: row;
   justify-content: space-around;
-  height: 25%;
+  height: 20%;
 }
 
 .lower {
@@ -86,13 +86,30 @@
   width: 15%;
 }
 
-.complaint
+.complaints
 {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 .newcomplaint
 {
   height: 3rem;
-  
+  width: 65%;
+}
+.vote
+{
+  display: flex;
+  justify-content: space-around;
+  width: 35%;
+}
+.thumb
+{
+  height: 2rem;
+  width: 2rem;
+  border-radius: 20%;
+}
+h5
+{
+  display: inline;
+  margin-left: .5rem;
 }
