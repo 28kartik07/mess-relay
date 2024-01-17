@@ -85,3 +85,14 @@
   background-color: bisque;
   width: 15%;
 }
+
+.complaint
+{
+  display: flex;
+  flex-direction: column;
+}
+.newcomplaint
+{
+  height: 3rem;
+  
+}

@@ -4,7 +4,7 @@
         <div class="left">
                 <div class="side">
                     <a class="nav-link" href="">Attendence</a>
-                </div>
+                </div>  
                 <div class="side"> 
                     <a class="nav-link" href="/complaint">complaint</a>
                 </div>
@@ -25,18 +25,19 @@
                 <div class="uppercontent">ayush</div>
             </div>
             <div class="lower">
-                <p>
-                    <p>your complaints are:-</p>
+                <p>your complaints</p>
+                <div class="complaint">
                     <% if (complaints.length > 0) { %>
-                        <ul>
                             <% complaints.forEach(complaint => { %>
-                                <li><%= complaint.complaint %></li>
+                                <div class="newcomplaint"><%= complaint.complaint %></div>
+                                <div><%= complaint.upvote %></div>
+                                <div><%= complaint.downvote %></div>
                             <% }); %>
-                        </ul>
                     <% } else { %>
                         <p>No complaints found.</p>
                     <% } %>
-                </p>
+                </div>
+    
             </div>
         </div>
     </div>
