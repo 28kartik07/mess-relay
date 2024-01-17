@@ -38,13 +38,13 @@ const userschema = new mongoose.Schema({
   hostel: String,
   gender: String,
   role: {
-    type : String,
-    default : "Student"
+    type: String,
+    default: "Student",
   },
   tcomplaint: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
 userschema.plugin(passportlocalmongoose);
@@ -60,18 +60,18 @@ const complaintschema = new mongoose.Schema({
   userid: mongoose.Types.ObjectId,
   username: String,
   complaint: String,
-  upvote : {
+  upvote: {
     type: Number,
     default: 0,
   },
-  downvote : {
+  downvote: {
     type: Number,
     default: 0,
   },
   status: {
     type: String,
     default: "not done",
-  }
+  },
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
@@ -138,7 +138,6 @@ app
     res.render("signup.ejs");
   })
   .post(function (req, res) {
-  
     usermodel.register(
       {
         username: req.body.username,
@@ -192,15 +191,20 @@ app.listen("3000", function (req, res) {
   console.log("server started");
 });
 
-
-
-
-// const u = new usermodel({
-//   username: "gore@gmail.com",
-//   name: "MM Gore",
-//   registration: "xxxx",
-//   hostel: "raman",
-//   gender: "male",
-//   role:"warden"
-// });
-// u.save();
+// usermodel.register(
+//   {
+//     username: "gore@gmail.com",
+//     name: "gore lal",
+//     registration: "xxxx",
+//     hostel: "raman",
+//     gender: "male",
+//     role: "admin",
+//   },
+//   "gore",
+//   (err, user) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).json({ error: "Error registering user" });
+//     }
+//   }
+// );
