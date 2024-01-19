@@ -60,6 +60,7 @@ const complaintschema = new mongoose.Schema({
   userid: mongoose.Types.ObjectId,
   username: String,
   complaint: String,
+  hostel: String,
   upvote: {
     type: Number,
     default: 0,
@@ -77,12 +78,11 @@ const complaintschema = new mongoose.Schema({
 const complaintmodel = mongoose.model("complaints", complaintschema);
 
 let cond = true;
+let islogged = false;
 
 app.route("/").get(function (req, res) {
   res.render("home.ejs", { islogged, cond });
 });
-
-let islogged = false;
 
 app
   .route("/login")
@@ -116,13 +116,10 @@ app
 
 app.route("/adminprofile").get(function (req, res) {
   cond = false;
-  var id = req.user._id;
-  // console.log(id);
-  usermodel.find({ _id: id }).then((data) => {
-    // complaintmodel.find({hostel})
-    console.log(data[0].hostel);
+  islogged = true;
+  complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
+    res.render("adminprofile.ejs", { complaints: data });
   });
-  res.render("adminprofile.ejs");
 });
 
 app
@@ -148,6 +145,7 @@ app
       userid: id,
       username: name,
       complaint: comp,
+      hostel: req.user.hostel,
     });
 
     c.save();
@@ -187,6 +185,7 @@ app.get("/logout", (req, res) => {
       console.error("Error destroying session:", err);
       res.status(500).send("Internal Server Error");
     } else {
+      islogged = false;
       res.redirect("/login"); // Redirect to the login page after logout
     }
   });
