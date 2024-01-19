@@ -5,8 +5,21 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportlocalmongoose = require("passport-local-mongoose");
-
+const multer = require("multer");
 const app = express();
+
+//storage and filename setting//
+
+const storage = multer.diskStorage({
+  destination: "public/uploads",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+//upload setting//
+const upload = multer({
+  storage: storage,
+});
 
 app.set("view-engine", "ejs");
 app.use(express.static("public"));
@@ -73,6 +86,8 @@ const complaintschema = new mongoose.Schema({
     type: String,
     default: "not done",
   },
+  hostel: String,
+  image: String,
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
@@ -131,7 +146,7 @@ app
       res.render("login.ejs", { error: "Login To Add Complaint" });
     }
   })
-  .post(function (req, res) {
+  .post(upload.single("image"), function (req, res) {
     var id = req.user._id;
     usermodel
       .updateOne({ _id: id }, { $inc: { tcomplaint: 1 } })
@@ -146,6 +161,7 @@ app
       username: name,
       complaint: comp,
       hostel: req.user.hostel,
+      image: req.file.filename,
     });
 
     c.save();

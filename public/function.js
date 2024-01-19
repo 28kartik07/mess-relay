@@ -1,0 +1,8 @@
+function like()
+{
+
+}
+function dislike()
+{
+    
+}
