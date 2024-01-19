@@ -25,7 +25,7 @@ app.use(passport.session());
 
 mongoose
   .connect(
-    "mongodb+srv://kartik:kartik123@cluster0.8ou8ajo.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://ayush2022ca016:jhaaayus@cluster0.v4icccp.mongodb.net/?retryWrites=true&w=majority"
   )
   .then(() => console.log("mongo connected"))
   .catch((err) => console.log(err));
@@ -38,13 +38,13 @@ const userschema = new mongoose.Schema({
   hostel: String,
   gender: String,
   role: {
-    type : String,
-    default : "Student"
+    type: String,
+    default: "Student",
   },
   tcomplaint: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
 userschema.plugin(passportlocalmongoose);
@@ -60,24 +60,26 @@ const complaintschema = new mongoose.Schema({
   userid: mongoose.Types.ObjectId,
   username: String,
   complaint: String,
-  upvote : {
+  upvote: {
     type: Number,
     default: 0,
   },
-  downvote : {
+  downvote: {
     type: Number,
     default: 0,
   },
   status: {
     type: String,
     default: "not done",
-  }
+  },
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
 
+let cond = true;
+
 app.route("/").get(function (req, res) {
-  res.render("home.ejs", { islogged });
+  res.render("home.ejs", { islogged, cond });
 });
 
 let islogged = false;
@@ -101,16 +103,36 @@ app
           if (err) console.log(err);
           if (!user) {
             res.render("login.ejs", { error: "Invalid User ID or Password" });
-          } else res.redirect("/profile");
+          } else {
+            usermodel.find({ username: req.body.username }).then((data) => {
+              if (data[0].role === "admin") res.redirect("/adminprofile");
+              else res.redirect("/userprofile");
+            });
+          }
         })(req, res);
       }
     });
   });
 
+app.route("/adminprofile").get(function (req, res) {
+  cond = false;
+  var id = req.user._id;
+  // console.log(id);
+  usermodel.find({ _id: id }).then((data) => {
+    // complaintmodel.find({hostel})
+    console.log(data[0].hostel);
+  });
+  res.render("adminprofile.ejs");
+});
+
 app
   .route("/complaint")
   .get(function (req, res) {
-    res.render("complaint.ejs");
+    if (req.isAuthenticated()) {
+      res.render("complaint.ejs");
+    } else {
+      res.render("login.ejs", { error: "Login To Add Complaint" });
+    }
   })
   .post(function (req, res) {
     var id = req.user._id;
@@ -129,7 +151,7 @@ app
     });
 
     c.save();
-    res.redirect("/profile");
+    res.redirect("/userprofile");
   });
 
 app
@@ -138,7 +160,6 @@ app
     res.render("signup.ejs");
   })
   .post(function (req, res) {
-  
     usermodel.register(
       {
         username: req.body.username,
@@ -171,20 +192,21 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.route("/profile").get(function (req, res) {
+app.route("/userprofile").get(function (req, res) {
+  cond = true;
   if (req.isAuthenticated()) {
     var id = req.user._id;
     islogged = true;
     complaintmodel
       .find({ userid: id })
       .then((data) => {
-        res.render("profile.ejs", { complaints: data, islogged });
+        res.render("userprofile.ejs", { complaints: data, islogged });
       })
       .catch((error) => {
         console.error(error);
       });
   } else {
-    res.render("login.ejs", { error: "Login To View Profile" });
+    res.render("login.ejs", { error: "Login To View userprofile" });
   }
 });
 
@@ -192,15 +214,20 @@ app.listen("3000", function (req, res) {
   console.log("server started");
 });
 
-
-
-
-// const u = new usermodel({
-//   username: "gore@gmail.com",
-//   name: "MM Gore",
-//   registration: "xxxx",
-//   hostel: "raman",
-//   gender: "male",
-//   role:"warden"
-// });
-// u.save();
+// usermodel.register(
+//   {
+//     username: "gore@gmail.com",
+//     name: "gore lal",
+//     registration: "xxxx",
+//     hostel: "raman",
+//     gender: "male",
+//     role: "admin",
+//   },
+//   "gore",
+//   (err, user) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).json({ error: "Error registering user" });
+//     }
+//   }
+// );
