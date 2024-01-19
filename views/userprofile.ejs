@@ -1,52 +1,56 @@
-<%- include('partials/header.ejs',{ hide : true,user : true }) %>
+<%- include('partials/header.ejs',{ hide : true ,user : true}) %>
 
 <div class="main">
-  <div class="left">
-    <div class="side">
-      <a class="nav-link" href="">Attendence</a>
+    <div class="left">
+            <div class="side">
+                <a class="nav-link" href="">Attendence</a>
+            </div>  
+            <div class="side"> 
+                <a class="nav-link" href="/complaint">complaint</a>
+            </div>
+            <div class="side">
+                <a class="nav-link" href="">Your plan</a>
+            </div>
+            <div class="side"> 
+                <a class="nav-link" href="">User Menu</a>
+            </div>
+            <div class="side"> 
+                <a class="nav-link" href="">information</a>
+            </div>
     </div>
-    <div class="side">
-      <a class="nav-link" href="/complaint">complaint</a>
-    </div>
-    <div class="side">
-      <a class="nav-link" href="">Your plan</a>
-    </div>
-    <div class="side">
-      <a class="nav-link" href="">User Menu</a>
-    </div>
-    <div class="side">
-      <a class="nav-link" href="">information</a>
-    </div>
-  </div>
-  <div class="right">
-    <div class="upper">
-      <div class="uppercontent">hello</div>
-      <div class="uppercontent">world</div>
-      <div class="uppercontent">ayush</div>
-    </div>
-    <div class="lower">
-      <p>your complaints</p>
-      <% if (complaints.length > 0) { %> <% complaints.forEach(complaint => { %>
-      <div class="complaints">
-        <div class="newcomplaint">
-          <h4><%= complaint.complaint %></h4>
+    <div class="right">
+        <div class="upper">
+            <div class="uppercontent">hello</div>
+            <div class="uppercontent">world</div>
+            <div class="uppercontent">ayush</div>
         </div>
-        <div class="vote">
-          <div>
-            <img class="thumb" src="images/like.png" />
-            <h5><%= complaint.upvote %></h5>
-          </div>
-          <div>
-            <img class="thumb" src="images/dislike.png" />
-            <h5><%= complaint.downvote %></h5>
-          </div>
+        <div class="lower scrollable-container">
+            <p>your complaints</p>
+                <% if (complaints.length > 0) { %>
+                        <% complaints.forEach(complaint => { %>
+                        <div class="complaints scrollable-content">
+                            <div class="image">
+                              <%if(complaint.image){%>
+                                <img class="complaint-image" src="uploads/<%= complaint.image %>">
+                              <%}else{%>
+                                <img class="complaint-image" src="images/image.png">
+                              <%}%>
+                            </div>
+                            <div class="newcomplaint">
+                                <h4><%= complaint.complaint %></h4>
+                            </div>
+                            <div class="vote">
+                                <div><button class="btn btn-light" onclick="like()"><img class="thumb" src="images/like.png"></button><h5><%= complaint.upvote %></h5></div>
+                                <div><button class="btn btn-light" onclick="dislike()"><img class="thumb" src="images/dislike.png"></button><h5><%= complaint.downvote %></h5></div>
+                            </div>
+                        </div>
+                        <% }); %>
+                <% } else { %>
+                    <p>No complaints found.</p>
+                <% } %>
         </div>
-      </div>
-      <% }); %> <% } else { %>
-      <p>No complaints found.</p>
-      <% } %>
     </div>
-  </div>
 </div>
 
 <%- include('partials/footer.ejs') %>
+

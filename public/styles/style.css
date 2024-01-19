@@ -108,8 +108,30 @@
   width: 2rem;
   border-radius: 20%;
 }
+.image
+{
+  width: 20%;
+}
+.complaint-image
+{
+  height: 3rem;
+  width: 3rem;
+}
 h5
 {
   display: inline;
   margin-left: .5rem;
+}
+
+/* scrollable window */    
+.scrollable-container {
+  width: 50%; /* Set a fixed width or use a percentage */
+  height: 80%; /* Set a fixed height or use a percentage */
+  overflow: auto; /* Enable scrolling */
+  border: 1px solid #ccc; /* Optional: Add a border for visual clarity */
+}
+
+.scrollable-content {
+  padding: 1rem;
+  margin: 0;
 }
