@@ -52,7 +52,10 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link" <% if (user) { %>
+              href="/userprofile" <% } else { %> href="/adminprofile" <% } %> <%
+              if (!hide) { %> style="display:none;" <% } %> >Profile</a
+            >
           </li>
         </ul>
         <!-- </div> -->
