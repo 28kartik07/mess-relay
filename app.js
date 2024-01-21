@@ -179,9 +179,8 @@ app
 
     c.save().then(()=>{
       fs.unlinkSync(imgpath);
+      res.redirect("/userprofile");
     });
-
-    res.redirect("/userprofile");
   });
 
 app
