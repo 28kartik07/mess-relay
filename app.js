@@ -12,17 +12,15 @@ const app = express();
 //storage and filename setting//
 
 const storage = multer.diskStorage({
-  destination : "public/uploads",
-  filename : function(req,file,cb){
-    cb(null,file.originalname)
-  }
+  destination: "public/uploads",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
 });
 //upload setting//
 const upload = multer({
-  storage : storage
+  storage: storage,
 });
-
-
 
 app.set("view-engine", "ejs");
 app.use(express.static("public"));
@@ -76,6 +74,7 @@ const complaintschema = new mongoose.Schema({
   userid: mongoose.Types.ObjectId,
   username: String,
   complaint: String,
+  hostel: String,
   upvote: {
     type: Number,
     default: 0,
@@ -88,20 +87,21 @@ const complaintschema = new mongoose.Schema({
     type: String,
     default: "not done",
   },
-  hostel:String,
+  hostel: String,
   image: String,
-  img64: String
+  hostel: String,
+  image: String,
+  img64: String,
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
 
 let cond = true;
+let islogged = false;
 
 app.route("/").get(function (req, res) {
   res.render("home.ejs", { islogged, cond });
 });
-
-let islogged = false;
 
 app
   .route("/login")
@@ -135,13 +135,10 @@ app
 
 app.route("/adminprofile").get(function (req, res) {
   cond = false;
-  var id = req.user._id;
-  // console.log(id);
-  usermodel.find({ _id: id }).then((data) => {
-    // complaintmodel.find({hostel})
-    console.log(data[0].hostel);
+  islogged = true;
+  complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
+    res.render("adminprofile.ejs", { complaints: data });
   });
-  res.render("adminprofile.ejs");
 });
 
 app
@@ -153,12 +150,12 @@ app
       res.render("login.ejs", { error: "Login To Add Complaint" });
     }
   })
-  .post(upload.single("image"),function (req, res) {
+  .post(upload.single("image"), function (req, res) {
     var id = req.user._id;
     var imgpath = req.file.path;
-  
-    //converting image to base 64 // 
-    const img = fs.readFileSync(imgpath,{encoding: 'base64'});
+
+    //converting image to base 64 //
+    const img = fs.readFileSync(imgpath, { encoding: "base64" });
 
     usermodel
       .updateOne({ _id: id }, { $inc: { tcomplaint: 1 } })
@@ -174,10 +171,11 @@ app
       complaint: comp,
       hostel: req.user.hostel,
       image: req.file.filename,
-      img64: img
+      image: req.file.filename,
+      img64: img,
     });
 
-    c.save().then(()=>{
+    c.save().then(() => {
       fs.unlinkSync(imgpath);
       res.redirect("/userprofile");
     });
@@ -216,28 +214,34 @@ app.get("/logout", (req, res) => {
       console.error("Error destroying session:", err);
       res.status(500).send("Internal Server Error");
     } else {
+      islogged = false;
       res.redirect("/login"); // Redirect to the login page after logout
     }
   });
 });
 
-app.route("/userprofile").get(function (req, res) {
-  cond = true;
-  if (req.isAuthenticated()) {
-    var id = req.user._id;
-    islogged = true;
-    complaintmodel
-      .find({ userid: id })
-      .then((data) => {
-        res.render("userprofile.ejs", { complaints: data, islogged });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  } else {
-    res.render("login.ejs", { error: "Login To View userprofile" });
-  }
-});
+app
+  .route("/userprofile")
+  .get(function (req, res) {
+    cond = true;
+    if (req.isAuthenticated()) {
+      var id = req.user._id;
+      islogged = true;
+      complaintmodel
+        .find({ userid: id })
+        .then((data) => {
+          res.render("userprofile.ejs", { complaints: data, islogged });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      res.render("login.ejs", { error: "Login To View userprofile" });
+    }
+  })
+  .post(function (req, res) {
+    console.log(req.body.cars);
+  });
 
 app.listen("3000", function (req, res) {
   console.log("server started");

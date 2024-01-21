@@ -46,9 +46,22 @@
   justify-content: space-around;
   height: 20%;
 }
-
+/* 
 .lower {
   height: 75%;
+} */
+
+.inside {
+  margin-left: 1rem;
+  display: flex;
+}
+
+.lleft {
+  width: 25%;
+}
+
+.lright {
+  width: 75%;
 }
 
 .uppercontent {
@@ -86,44 +99,37 @@
   width: 15%;
 }
 
-.complaints
-{
+.complaints {
   display: flex;
   flex-direction: row;
 }
-.newcomplaint
-{
+.newcomplaint {
   height: 3rem;
   width: 65%;
 }
-.vote
-{
+.vote {
   display: flex;
   justify-content: space-around;
   width: 35%;
 }
-.thumb
-{
+.thumb {
   height: 2rem;
   width: 2rem;
   border-radius: 20%;
 }
-.cimage
-{
+.image {
   width: 20%;
 }
-.complaint-image
-{
+.complaint-image {
   height: 3rem;
   width: 3rem;
 }
-h5
-{
+.line {
   display: inline;
-  margin-left: .5rem;
+  margin-left: 0.5rem;
 }
 
-/* scrollable window */    
+/* scrollable window */
 .scrollable-container {
   width: 50%; /* Set a fixed width or use a percentage */
   height: 80%; /* Set a fixed height or use a percentage */
