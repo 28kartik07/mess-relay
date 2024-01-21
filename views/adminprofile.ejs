@@ -22,16 +22,37 @@
       <div class="uppercontent">Gore</div>
     </div>
     <div class="lower">
-      <p>User complaints</p>
-      <% if (complaints.length > 0) { %> <% complaints.forEach(complaint => { %>
-      <div class="complaints">
-        <div class="newcomplaint">
-          <h4><%= complaint.username %></h4>
+      <div class="inside">
+        <div class="lleft">
+          <h5 style="margin-left: 2rem">User</h5>
+          <% if (complaints.length > 0) { %> <% complaints.forEach(complaint =>
+          { %>
+          <div class="complaints">
+            <div class="newcomplaint">
+              <h5><%= complaint.username %></h5>
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <p>No User found.</p>
+          <% } %>
+        </div>
+        <div class="lright">
+          <h6 style="margin-left: 1rem">Complaints</h6>
+          <% if (complaints.length > 0) { %> <% complaints.forEach(complaint =>
+          { %>
+          <div class="complaints">
+            <div class="newcomplaint">
+              <h5><%= complaint.complaint %></h5>
+            </div>
+            <div class="tick">
+              <input type="checkbox" name="solve" id="tick" />
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <p>No complaints found.</p>
+          <% } %>
         </div>
       </div>
-      <% }); %> <% } else { %>
-      <p>No complaints found.</p>
-      <% } %>
     </div>
   </div>
 </div>

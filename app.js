@@ -207,23 +207,28 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.route("/userprofile").get(function (req, res) {
-  cond = true;
-  if (req.isAuthenticated()) {
-    var id = req.user._id;
-    islogged = true;
-    complaintmodel
-      .find({ userid: id })
-      .then((data) => {
-        res.render("userprofile.ejs", { complaints: data, islogged });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  } else {
-    res.render("login.ejs", { error: "Login To View userprofile" });
-  }
-});
+app
+  .route("/userprofile")
+  .get(function (req, res) {
+    cond = true;
+    if (req.isAuthenticated()) {
+      var id = req.user._id;
+      islogged = true;
+      complaintmodel
+        .find({ userid: id })
+        .then((data) => {
+          res.render("userprofile.ejs", { complaints: data, islogged });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      res.render("login.ejs", { error: "Login To View userprofile" });
+    }
+  })
+  .post(function (req, res) {
+    console.log(req.body.cars);
+  });
 
 app.listen("3000", function (req, res) {
   console.log("server started");
