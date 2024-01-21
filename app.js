@@ -6,6 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportlocalmongoose = require("passport-local-mongoose");
 const multer = require("multer");
+const fs = require("fs");
 const app = express();
 
 //storage and filename setting//
@@ -88,7 +89,8 @@ const complaintschema = new mongoose.Schema({
     default: "not done",
   },
   hostel:String,
-  image: String
+  image: String,
+  img64: String
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
@@ -153,6 +155,11 @@ app
   })
   .post(upload.single("image"),function (req, res) {
     var id = req.user._id;
+    var imgpath = req.file.path;
+  
+    //converting image to base 64 // 
+    const img = fs.readFileSync(imgpath,{encoding: 'base64'});
+
     usermodel
       .updateOne({ _id: id }, { $inc: { tcomplaint: 1 } })
       .then((result) => {
@@ -166,10 +173,14 @@ app
       username: name,
       complaint: comp,
       hostel: req.user.hostel,
-      image: req.file.filename
+      image: req.file.filename,
+      img64: img
     });
 
-    c.save();
+    c.save().then(()=>{
+      fs.unlinkSync(imgpath);
+    });
+
     res.redirect("/userprofile");
   });
 
