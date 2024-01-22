@@ -177,9 +177,8 @@ app
 
     c.save().then(() => {
       fs.unlinkSync(imgpath);
+      res.redirect("/userprofile");
     });
-
-    res.redirect("/userprofile");
   });
 
 app
@@ -231,7 +230,7 @@ app
       complaintmodel
         .find({ userid: id })
         .then((data) => {
-          res.render("userprofile.ejs", { complaints: data, islogged });
+          res.render("userprofile.ejs", { complaints: data, select: true });
         })
         .catch((error) => {
           console.error(error);
@@ -241,7 +240,17 @@ app
     }
   })
   .post(function (req, res) {
-    console.log(req.body.cars);
+    const v = req.body.choose;
+    if (v === "All") {
+      complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
+        res.render("userprofile.ejs", { complaints: data, select: true });
+      });
+    } else {
+      complaintmodel.find({ userid: req.user._id }).then((data) => {
+        res.render("userprofile.ejs", { complaints: data, select: false });
+      });
+    }
+    // res.redirect("/userprofile");
   });
 
 app.listen("3000", function (req, res) {
