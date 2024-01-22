@@ -30,7 +30,7 @@
       <div class="complaints scrollable-content">
         <div class="image">
           <%if(complaint.image){%>
-          <img class="complaint-image" src="uploads/<%= complaint.image %>" />
+          <img class="complaint-image" src="data:image/jpeg;base64,<%= complaint.img64 %>" />
           <%}else{%>
           <img class="complaint-image" src="images/image.png" />
           <%}%>
