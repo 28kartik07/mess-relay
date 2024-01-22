@@ -1,8 +1,2 @@
-function like()
-{
-
-}
-function dislike()
-{
-    
-}
+function like() {}
+function dislike() {}

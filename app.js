@@ -87,9 +87,6 @@ const complaintschema = new mongoose.Schema({
     type: String,
     default: "not done",
   },
-  hostel: String,
-  image: String,
-  hostel: String,
   image: String,
   img64: String,
 });
@@ -171,7 +168,6 @@ app
       complaint: comp,
       hostel: req.user.hostel,
       image: req.file.filename,
-      image: req.file.filename,
       img64: img,
     });
 
@@ -250,7 +246,6 @@ app
         res.render("userprofile.ejs", { complaints: data, select: false });
       });
     }
-    // res.redirect("/userprofile");
   });
 
 app.listen("3000", function (req, res) {
