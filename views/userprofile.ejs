@@ -32,16 +32,19 @@
           <div class="uppercontent">ayush</div>
         </div>
         <div class="lower scrollable-container">
+          
           <div class="inside">
+            <div >
+              <h3>complaints</h3>
+            </div>      
             <form id="myForm" action="/userprofile" method="post">
-              <!-- <label for="choose">your complaints :</label> -->
               <select name="choose" onchange="submitForm()">
-                <option>Choose a Option</option>
+                <!-- <option>Choose a Option</option> -->
                 <option value="Your complaint" <% if (!select) { %>
                   selected <% } %>>Your complaint
                 </option>
                 <option value="All" <% if (select) { %>
-                  selected <% } %>>All
+                  selected <% } %>>All complaint
                 </option>
               </select>
             </form>
@@ -85,12 +88,3 @@
     </div>
 
     <%- include('partials/footer.ejs') %>
-
-    <script>
-      function submitForm() {
-        var form = document.getElementById("myForm");
-        form.submit();
-      }
-    </script>
-  </body>
-</html>
