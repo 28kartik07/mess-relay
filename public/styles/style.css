@@ -1,13 +1,13 @@
 .contain {
   position: relative;
 }
-/* 
-.image{
-  display:  block;
+
+.image {
+  display: block;
   margin-left: 0;
   margin-right: auto;
-  width: 70%;
-} */
+  width: 100%;
+}
 
 .block {
   position: absolute;
@@ -116,9 +116,6 @@
   height: 2rem;
   width: 2rem;
   border-radius: 20%;
-}
-.image {
-  width: 20%;
 }
 .complaint-image {
   height: 3rem;
