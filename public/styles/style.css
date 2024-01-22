@@ -3,10 +3,7 @@
 }
 
 .image {
-  display: block;
-  margin-left: 0;
-  margin-right: auto;
-  width: 100%;
+  margin-right: 1rem;
 }
 
 .block {
@@ -46,10 +43,11 @@
   justify-content: space-around;
   height: 20%;
 }
-/* 
+
 .lower {
   height: 75%;
-} */
+  padding: 2rem;
+}
 
 .inside {
   margin-left: 1rem;
@@ -128,7 +126,7 @@
 
 /* scrollable window */
 .scrollable-container {
-  width: 50%; /* Set a fixed width or use a percentage */
+  width: 100%; /* Set a fixed width or use a percentage */
   height: 80%; /* Set a fixed height or use a percentage */
   overflow: auto; /* Enable scrolling */
   border: 1px solid #ccc; /* Optional: Add a border for visual clarity */
