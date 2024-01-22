@@ -3,7 +3,7 @@
 }
 
 .image {
-  margin-right: 1rem;
+  margin-right: 2rem;
 }
 
 .block {
@@ -47,11 +47,6 @@
 .lower {
   height: 75%;
   padding: 2rem;
-}
-
-.inside {
-  margin-left: 1rem;
-  display: flex;
 }
 
 .lleft {
@@ -115,6 +110,10 @@
   width: 2rem;
   border-radius: 20%;
 }
+.upvote
+{
+  text-align: center;
+}
 .complaint-image {
   height: 3rem;
   width: 3rem;
@@ -127,7 +126,7 @@
 /* scrollable window */
 .scrollable-container {
   width: 100%; /* Set a fixed width or use a percentage */
-  height: 80%; /* Set a fixed height or use a percentage */
+  height: 100%; /* Set a fixed height or use a percentage */
   overflow: auto; /* Enable scrolling */
   border: 1px solid #ccc; /* Optional: Add a border for visual clarity */
 }

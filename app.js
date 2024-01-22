@@ -85,7 +85,7 @@ const complaintschema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "not done",
+    default: "open"
   },
   image: String,
   img64: String,
@@ -246,7 +246,6 @@ app
         res.render("userprofile.ejs", { complaints: data, select: false });
       });
     }
-    
   });
 
 app.listen("3000", function (req, res) {
