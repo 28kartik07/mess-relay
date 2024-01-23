@@ -85,7 +85,7 @@ const complaintschema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "not done",
+    default: "open"
   },
   image: String,
   img64: String,

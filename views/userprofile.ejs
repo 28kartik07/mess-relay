@@ -27,9 +27,10 @@
       </div>
       <div class="right">
         <div class="upper">
-          <div class="uppercontent">hello</div>
-          <div class="uppercontent">world</div>
-          <div class="uppercontent">ayush</div>
+          <div class="uppercontent">open</div>
+          <div class="uppercontent">closed</div>
+          <div class="uppercontent">in progress</div>
+          <div class="uppercontent">chart</div>
         </div>
         <div class="lower scrollable-container">
           <div class="inside">
@@ -48,40 +49,46 @@
               </select>
             </form>
           </div>
-          <% if (complaints.length > 0) { %> <% complaints.forEach(complaint =>
-          { %>
-          <div class="complaints scrollable-content">
-            <div class="image">
-              <%if(complaint.image){%>
-              <img
-                class="complaint-image"
-                src="data:image/jpeg;base64,<%= complaint.img64 %>"
-              />
-              <%}else{%>
-              <img class="complaint-image" src="images/image.png" />
-              <%}%>
-            </div>
-            <div class="newcomplaint">
-              <h4><%= complaint.complaint %></h4>
-            </div>
-            <div class="vote">
-              <div>
-                <button class="btn btn-light" onclick="like()">
-                  <img class="thumb" src="images/like.png" />
-                </button>
-                <h5 id="val"><%= complaint.upvote %></h5>
+          <div class="scrollable-container">
+            <% if (complaints.length > 0) { %> <% complaints.forEach(complaint
+            => { %>
+            <div class="complaints scrollable-content">
+              <div class="image">
+                <%if(complaint.image){%>
+                <img
+                  class="complaint-image"
+                  src="data:image/jpeg;base64,<%= complaint.img64 %>"
+                />
+                <%}else{%>
+                <img class="complaint-image" src="images/image.png" />
+                <%}%>
               </div>
-              <div>
-                <button class="btn btn-light" onclick="dislike()">
-                  <img class="thumb" src="images/dislike.png" />
-                </button>
-                <h5><%= complaint.downvote %></h5>
+              <div class="newcomplaint">
+                <h4><%= complaint.complaint %></h4>
+              </div>
+              <div class="vote">
+                <div>
+                  <button class="btn btn-light" onclick="like()">
+                    <img class="thumb" src="images/like.png" />
+                  </button>
+                  <div class="upvote">
+                    <h5><%= complaint.upvote %></h5>
+                  </div>
+                </div>
+                <div>
+                  <button class="btn btn-light" onclick="dislike()">
+                    <img class="thumb" src="images/dislike.png" />
+                  </button>
+                  <div class="upvote">
+                    <h5><%= complaint.downvote %></h5>
+                  </div>
+                </div>
               </div>
             </div>
+            <% }); %> <% } else { %>
+            <p>No complaints found.</p>
+            <% } %>
           </div>
-          <% }); %> <% } else { %>
-          <p>No complaints found.</p>
-          <% } %>
         </div>
       </div>
     </div>
