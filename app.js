@@ -85,7 +85,7 @@ const complaintschema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "open"
+    default: "open",
   },
   image: String,
   img64: String,
@@ -226,7 +226,7 @@ app
       complaintmodel
         .find({ userid: id })
         .then((data) => {
-          res.render("userprofile.ejs", { complaints: data, select: true });
+          res.render("userprofile.ejs", { complaints: data });
         })
         .catch((error) => {
           console.error(error);
@@ -237,13 +237,21 @@ app
   })
   .post(function (req, res) {
     const v = req.body.choose;
+    const id = req.body.lik;
+    if (id) {
+      complaintmodel
+        .updateOne({ _id: id }, { $inc: { upvote: 1 } })
+        .then((result) => {
+          if (!result) console.log("not updated");
+        });
+    }
     if (v === "All") {
       complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
-        res.render("userprofile.ejs", { complaints: data, select: true });
+        res.render("userprofile.ejs", { complaints: data });
       });
     } else {
       complaintmodel.find({ userid: req.user._id }).then((data) => {
-        res.render("userprofile.ejs", { complaints: data, select: false });
+        res.render("userprofile.ejs", { complaints: data });
       });
     }
   });
