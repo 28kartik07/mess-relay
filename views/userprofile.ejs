@@ -57,7 +57,9 @@
             <%}%>
           </div>
           <div class="newcomplaint">
-            <h4><%= complaint.complaint %></h4>
+                <div>
+              <h4><%= complaint.complaint %></h4>
+                </div>
           </div>
           <div class="vote">
             <div>
@@ -76,6 +78,13 @@
                 <h5><%= complaint.downvote %></h5>
               </div>
             </div>
+                <%if(complaint.status == "not done"){%>
+                  <div class="status" style="background-color: lightblue; color: darkblue;"><%= complaint.status %></div>
+                <%}else if(complaint.status == "done"){%>
+                  <div class="status" style="background-color: lightgreen; color: darkgreen;"><%= complaint.status %></div>
+                <%}else{%>
+                  <div class="status" style="background-color: lightsalmon; color: darkred;"><%= complaint.status %></div>
+                <%}%> 
           </div>
         </div>
         <% }); %> <% } else { %>
