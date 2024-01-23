@@ -1,98 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <body>
-    <%- include('partials/header.ejs',{ hide : true ,user : true}) %>
+<%- include('partials/header.ejs',{ hide : true ,user : true}) %>
 
-    <div class="main">
-      <div class="left">
-        <div class="side">
-          <a class="nav-link" href="">Attendence</a>
-        </div>
-        <div class="side">
-          <a class="nav-link" href="/complaint">complaint</a>
-        </div>
-        <div class="side">
-          <a class="nav-link" href="">Your plan</a>
-        </div>
-        <div class="side">
-          <a class="nav-link" href="">User Menu</a>
-        </div>
-        <div class="side">
-          <a class="nav-link" href="">information</a>
-        </div>
-      </div>
-      <div class="right">
-        <div class="upper">
-          <div class="uppercontent">open</div>
-          <div class="uppercontent">closed</div>
-          <div class="uppercontent">in progress</div>
-          <div class="uppercontent">chart</div>
-        </div>
-        <div class="lower scrollable-container">
-          <div class="inside">
-            <div>
-              <h3>complaints</h3>
-            </div>
-            <form id="myForm" action="/userprofile" method="post">
-              <select name="choose" onchange="submitForm()">
-                <!-- <option>Choose a Option</option> -->
-                <option value="Your complaint" <% if (!select) { %>
-                  selected <% } %>>Your complaint
-                </option>
-                <option value="All" <% if (select) { %>
-                  selected <% } %>>All complaint
-                </option>
-              </select>
-            </form>
-          </div>
-          <div class="scrollable-container">
-            <% if (complaints.length > 0) { %> <% complaints.forEach(complaint
-            => { %>
-            <div class="complaints scrollable-content">
-              <div class="image">
-                <%if(complaint.image){%>
-                <img
-                  class="complaint-image"
-                  src="data:image/jpeg;base64,<%= complaint.img64 %>"
-                />
-                <%}else{%>
-                <img class="complaint-image" src="images/image.png" />
-                <%}%>
-              </div>
-              <div class="newcomplaint">
-                <h4><%= complaint.complaint %></h4>
-              </div>
-              <div class="vote">
-                <div>
-                  <button class="btn btn-light" onclick="like()">
-                    <img class="thumb" src="images/like.png" />
-                  </button>
-                  <div class="upvote">
-                    <h5><%= complaint.upvote %></h5>
-                  </div>
-                </div>
-                <div>
-                  <button class="btn btn-light" onclick="dislike()">
-                    <img class="thumb" src="images/dislike.png" />
-                  </button>
-                  <div class="upvote">
-                    <h5><%= complaint.downvote %></h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <% }); %> <% } else { %>
-            <p>No complaints found.</p>
-            <% } %>
-          </div>
-        </div>
-      </div>
+<div class="main">
+  <div class="left">
+    <div class="side">
+      <a class="nav-link" href="">Attendence</a>
+    </div>
+    <div class="side">
+      <a class="nav-link" href="/complaint">complaint</a>
+    </div>
+    <div class="side">
+      <a class="nav-link" href="">Your plan</a>
+    </div>
+    <div class="side">
+      <a class="nav-link" href="">User Menu</a>
+    </div>
+    <div class="side">
+      <a class="nav-link" href="">information</a>
+    </div>
+  </div>
+  <div class="right">
+    <div class="upper">
+      <div class="uppercontent">open</div>
+      <div class="uppercontent">closed</div>
+      <div class="uppercontent">in progress</div>
+      <div class="uppercontent">chart</div>
     </div>
 
-    <%- include('partials/footer.ejs') %>
-  </body>
-</html>
+    <div class="lower">
+      <div>
+        <form action="/userprofile" method="post">
+          <button
+            type="submit"
+            class="btn btn-light"
+            name="choose"
+            value="your"
+          >
+            Your Complaints
+          </button>
+          <button type="submit" class="btn btn-light" name="choose" value="All">
+            All
+          </button>
+        </form>
+      </div>
+      <div class="scrollable-container">
+        <% if (complaints.length > 0) { %> <% complaints.forEach(complaint => {
+        %>
+        <div class="complaints scrollable-content">
+          <div class="image">
+            <%if(complaint.image){%>
+            <img
+              class="complaint-image"
+              src="data:image/jpeg;base64,<%= complaint.img64 %>"
+            />
+            <%}else{%>
+            <img class="complaint-image" src="images/image.png" />
+            <%}%>
+          </div>
+          <div class="newcomplaint">
+            <h4><%= complaint.complaint %></h4>
+          </div>
+          <div class="vote">
+            <div>
+              <form id="myForm" action="/userprofile" method="post">
+                <button
+                  class="btn btn-light"
+                  id="val"
+                  name="lik"
+                  value="<%= complaint.id %>"
+                >
+                  <img class="thumb" src="images/like.png" />
+                </button>
+              </form>
+              <div class="upvote">
+                <h5><%= complaint.upvote %></h5>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-light" onclick="dislike()">
+                <img class="thumb" src="images/dislike.png" />
+              </button>
+              <div class="upvote">
+                <h5><%= complaint.downvote %></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %> <% } else { %>
+        <p>No complaints found.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
