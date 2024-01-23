@@ -61,16 +61,9 @@
           </div>
           <div class="vote">
             <div>
-              <form id="myForm" action="/userprofile" method="post">
-                <button
-                  class="btn btn-light"
-                  id="val"
-                  name="lik"
-                  value="<%= complaint.id %>"
-                >
-                  <img class="thumb" src="images/like.png" />
-                </button>
-              </form>
+              <button class="btn btn-light" onclick="like()">
+                <img class="thumb" src="images/like.png" />
+              </button>
               <div class="upvote">
                 <h5><%= complaint.upvote %></h5>
               </div>
