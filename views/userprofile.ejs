@@ -19,11 +19,29 @@
     </div>
   </div>
   <div class="right">
-    <div class="upper">
-      <div class="uppercontent">open</div>
-      <div class="uppercontent">closed</div>
-      <div class="uppercontent">in progress</div>
-      <div class="uppercontent">chart</div>
+    <div class="above">
+      <div class="let">Complaint Overview</div>
+      <div class="upper">
+        <div class="uppercontent">
+          <div class="leftdesign" style="background-color: lightsalmon"></div>
+          <div class="rightdesign">
+            open
+            <div>hi</div>
+          </div>
+        </div>
+        <div class="uppercontent">
+          <div class="leftdesign" style="background-color: lightgreen"></div>
+          <div class="rightdesign">closed</div>
+        </div>
+        <div class="uppercontent">
+          <div class="leftdesign" style="background-color: lightskyblue"></div>
+          <div class="rightdesign">in progress</div>
+        </div>
+        <div class="uppercontent">
+          <div class="leftdesign" style="background-color: lightsalmon"></div>
+          <div class="rightdesign">chart</div>
+        </div>
+      </div>
     </div>
 
     <div class="lower">
@@ -57,9 +75,9 @@
             <%}%>
           </div>
           <div class="newcomplaint">
-                <div>
+            <div>
               <h4><%= complaint.complaint %></h4>
-                </div>
+            </div>
           </div>
           <div class="vote">
             <div>
@@ -78,13 +96,28 @@
                 <h5><%= complaint.downvote %></h5>
               </div>
             </div>
-                <%if(complaint.status == "not done"){%>
-                  <div class="status" style="background-color: lightblue; color: darkblue;"><%= complaint.status %></div>
-                <%}else if(complaint.status == "done"){%>
-                  <div class="status" style="background-color: lightgreen; color: darkgreen;"><%= complaint.status %></div>
-                <%}else{%>
-                  <div class="status" style="background-color: lightsalmon; color: darkred;"><%= complaint.status %></div>
-                <%}%> 
+            <%if(complaint.status == "not done"){%>
+            <div
+              class="status"
+              style="background-color: lightblue; color: darkblue"
+            >
+              <%= complaint.status %>
+            </div>
+            <%}else if(complaint.status == "done"){%>
+            <div
+              class="status"
+              style="background-color: lightgreen; color: darkgreen"
+            >
+              <%= complaint.status %>
+            </div>
+            <%}else{%>
+            <div
+              class="status"
+              style="background-color: lightsalmon; color: darkred"
+            >
+              <%= complaint.status %>
+            </div>
+            <%}%>
           </div>
         </div>
         <% }); %> <% } else { %>

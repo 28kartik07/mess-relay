@@ -16,42 +16,25 @@
     </div>
   </div>
   <div class="right">
-    <div class="upper">
+    <div class="adminabove">
       <div class="uppercontent">hello</div>
       <div class="uppercontent">MM</div>
       <div class="uppercontent">Gore</div>
     </div>
     <div class="lower">
-      <div class="inside">
-        <div class="lleft">
-          <h5 style="margin-left: 2rem">User</h5>
-          <% if (complaints.length > 0) { %> <% complaints.forEach(complaint =>
-          { %>
-          <div class="complaints">
-            <div class="newcomplaint">
-              <h5><%= complaint.username %></h5>
-            </div>
-          </div>
-          <% }); %> <% } else { %>
-          <p>No User found.</p>
-          <% } %>
+      <div class="scrollable-container">
+        <div class="llower">
+          <div class="use">User</div>
+          <div class="comp">User's Complaint</div>
         </div>
-        <div class="lright">
-          <h6 style="margin-left: 1rem">Complaints</h6>
-          <% if (complaints.length > 0) { %> <% complaints.forEach(complaint =>
-          { %>
-          <div class="complaints">
-            <div class="newcomplaint">
-              <h5><%= complaint.complaint %></h5>
-            </div>
-            <div class="tick">
-              <input type="checkbox" name="solve" id="tick" />
-            </div>
-          </div>
-          <% }); %> <% } else { %>
-          <p>No complaints found.</p>
-          <% } %>
+        <% if (complaints.length>0) { %> <% complaints.forEach(complaint => { %>
+        <div class="complaints scrollable-content">
+          <div class="user"><%= complaint.username %></div>
+          <div class="usercomplaint"><%= complaint.complaint %></div>
+          <div class="tick1"><input type="checkbox" /></div>
+          <div class="tick2"><input type="checkbox" /></div>
         </div>
+        <% }) %> <% } %>
       </div>
     </div>
   </div>

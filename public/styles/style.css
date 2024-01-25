@@ -36,12 +36,33 @@
 .right {
   width: 85%;
 }
-.upper {
-  display: flex;
+
+.above {
   background-color: silver;
+  height: 25%;
+}
+
+.let {
+  padding-top: 1rem;
+  margin-left: 2rem;
+  font-size: large;
+  font-weight: 900;
+}
+
+.upper {
+  padding-top: 1rem;
+  display: flex;
   flex-direction: row;
   justify-content: space-around;
-  height: 20%;
+}
+
+
+.leftdesign {
+  width: 5%;
+}
+
+.rightdesign {
+  width: 90%;
 }
 
 .lower {
@@ -60,6 +81,18 @@
 .uppercontent {
   width: 10rem;
   text-align: center;
+  display: flex;
+  height: 3rem;
+}
+/* .uppercontent {
+  
+} */
+
+.adminabove {
+  display: flex;
+  background-color: #ccc;
+  height: 25%;
+  justify-content: space-around;
 }
 
 .area {
@@ -135,9 +168,31 @@
   margin: 0;
 }
 
+.user {
+  width: 15%;
+}
+
+.usercomplaint {
+  width: 45%;
+}
+
+.tick1 {
+  width: 10%;
+}
+
+.tick2 {
+  width: 5%;
+}
+
+.llower {
+  display: flex;
+}
+
+.use {
+}
+
 /* status of the comlaint button style */
-.status
-{
+.status {
   height: 1rem;
   width: 5rem;
   text-align: center;
@@ -147,4 +202,3 @@
   font-weight: bolder;
   border-radius: 10%;
 }
-
