@@ -24,7 +24,6 @@ var likebutton = document.querySelectorAll(".val");
     }
     clicks++;
     document.getElementById("like_"+id).innerHTML = votes;
-
     var index = likedata.find(i => i.userid === id);
     if(index !== undefined)
     {
@@ -69,6 +68,28 @@ dislikebutton.forEach(function(i){
     });
 });
 
+const ctx = document.getElementById('myChart');
 
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    }
+  });
+// document.addEventListener('DOMContentLoaded', function() {
+//   window.addEventListener('beforeunload', function() {
+//       // Perform an AJAX request to your server to store data
+//       fetch('/complaint', {
+//           method: 'POST',
+//           headers: {
+//               'Content-Type': 'application/json'
+//           },
+//           body: JSON.stringify(likedata)
+//       });
+//   });
+// });
 
 
