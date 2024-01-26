@@ -43,7 +43,6 @@
         </div>
       </div>
     </div>
-
     <div class="lower">
       <div>
         <form action="/userprofile" method="post">
@@ -89,11 +88,11 @@
               </div>
             </div>
             <div>
-              <button class="btn btn-light">
+              <button class="btn btn-light dec" data-val1="<%= complaint.id %>" data-val2="<%= complaint.downvote %>">
                 <img class="thumb" src="images/dislike.png" />
               </button>
               <div class="upvote">
-                <h5 id="dislike"><%= complaint.downvote %></h5>
+                <h5 id="dislike_<%= complaint.id %>"><%= complaint.downvote %></h5>
               </div>
             </div>
             <%if(complaint.status == "not done"){%>

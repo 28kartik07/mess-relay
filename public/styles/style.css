@@ -202,3 +202,8 @@
   font-weight: bolder;
   border-radius: 10%;
 }
+
+#chart{
+  margin-left: 5rem;
+  width: 5rem;
+}

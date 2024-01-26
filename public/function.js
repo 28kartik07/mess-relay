@@ -29,15 +29,45 @@ var likebutton = document.querySelectorAll(".val");
     if(index !== undefined)
     {
       index.upvote = votes;
-      console.log(index.upvote);
     }
     else
     { 
       likedata.push(likes);
-      console.log("not found");
     }
   });
 }); 
+
+var dislikedata = [];
+
+var dislikebutton=document.querySelectorAll(".dec");
+
+dislikebutton.forEach(function(i){
+    var clicks=0;
+    var dislikes={
+        userid : "",
+        downvote : 0
+    };
+    i.addEventListener("click",function(){
+      var id = i.getAttribute("data-val1");
+      var votes = i.getAttribute("data-val2");
+      if(clicks%2 == 0){
+        votes++;
+      }
+      dislikes.userid=id;
+      dislikes.downvote=votes;
+      clicks++;
+      console.log(votes);
+      document.getElementById("dislike_"+id).innerHTML = votes;
+      
+      var index=dislikedata.find(j => j.userid===id);
+      if(index!=undefined){
+        index.downvote=votes;
+      }
+      else{
+        dislikedata.push(dislikes);
+      }
+    });
+});
 
 
 
