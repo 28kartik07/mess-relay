@@ -150,8 +150,8 @@ app
   .post(upload.single("image"), function (req, res) {
     var id = req.user._id;
     var imgpath = req.file.path;
-
-    //converting image to base 64 //
+    console.log(req.body);
+    //converting image  to base 64 //
     const img = fs.readFileSync(imgpath, { encoding: "base64" });
 
     usermodel
