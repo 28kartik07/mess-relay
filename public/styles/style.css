@@ -40,6 +40,7 @@
 .above {
   background-color: silver;
   height: 25%;
+  display: flex;
 }
 
 .let {

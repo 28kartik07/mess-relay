@@ -1,5 +1,5 @@
 var likedata = [];
-
+const c="hi";
 var likebutton = document.querySelectorAll(".val");
 
   likebutton.forEach(function(button){
@@ -36,7 +36,7 @@ var likebutton = document.querySelectorAll(".val");
   });
 }); 
 
-var dislikedata = [];
+let loaded=false;
 
 var dislikebutton=document.querySelectorAll(".dec");
 
@@ -55,18 +55,37 @@ dislikebutton.forEach(function(i){
       dislikes.userid=id;
       dislikes.downvote=votes;
       clicks++;
-      console.log(votes);
       document.getElementById("dislike_"+id).innerHTML = votes;
-      
-      var index=dislikedata.find(j => j.userid===id);
+      loaded=true;
+      var index=likedata.find(j => j.userid===id);
       if(index!=undefined){
         index.downvote=votes;
       }
       else{
-        dislikedata.push(dislikes);
+        likedata.push(dislikes);
       }
+      
     });
-});
+  });
+  
+  window.addEventListener('unload', function () {
+    // Make sure dislikedata is an object with the required data
+    if(loaded){
+      console.log(likedata);
+      const payload = { likedata };
+    
+      // Perform the fetch operation to send data to the server
+      fetch('/userprofile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      loaded=false;
+    }
+  });
 
 const ctx = document.getElementById('myChart');
 
@@ -79,17 +98,3 @@ const ctx = document.getElementById('myChart');
       }]
     }
   });
-// document.addEventListener('DOMContentLoaded', function() {
-//   window.addEventListener('beforeunload', function() {
-//       // Perform an AJAX request to your server to store data
-//       fetch('/complaint', {
-//           method: 'POST',
-//           headers: {
-//               'Content-Type': 'application/json'
-//           },
-//           body: JSON.stringify(likedata)
-//       });
-//   });
-// });
-
-

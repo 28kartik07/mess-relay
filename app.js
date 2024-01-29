@@ -34,6 +34,7 @@ app.use(
   })
 );
 
+app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -237,6 +238,11 @@ app
   })
   .post(function (req, res) {
     const v = req.body.choose;
+    let arr=[];
+    arr=req.body.likedata;
+    if(arr && arr.length > 0){
+      console.log("array is : ",arr);
+    }
     // const id = req.body.lik;
     // if (id) {
     //   complaintmodel
@@ -245,12 +251,13 @@ app
     //       if (!result) console.log("not updated");
     //     });
     // }
+    var id=req.user._id;
     if (v === "All") {
       complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
         res.render("userprofile.ejs", { complaints: data });
       });
     } else {
-      complaintmodel.find({ userid: req.user._id }).then((data) => {
+      complaintmodel.find({ userid: id }).then((data) => {
         res.render("userprofile.ejs", { complaints: data });
       });
     }
