@@ -1,6 +1,8 @@
 <%- include('partials/header.ejs',{ hide : true ,user : true}) %>
 
 <div class="main">
+
+  <!-- side pannel  -->
   <div class="left">
     <div class="side">
       <a class="nav-link" href="">Attendence</a>
@@ -18,33 +20,61 @@
       <a class="nav-link" href="">information</a>
     </div>
   </div>
+
+<!-- right user profile -->
   <div class="right">
-    <div class="above">
-      <div class="let">Complaint Overview</div>
+
+    <!-- right upper for complaint data  -->
+    <!-- <div class="above"> -->
+      
       <div class="upper">
-        <div class="uppercontent">
-          <div class="leftdesign" style="background-color: lightsalmon"></div>
-          <div class="rightdesign">
-            open
-            <div>hi</div>
+        <div class="leftupper">
+          <div class="let">
+            Complaint Overview
           </div>
+
+          <div class="dataset">
+            <div class="uppercontent">
+              <div class="leftdesign" style="background-color: lightsalmon"></div>
+              <div class="rightdesign">
+                open
+                <div class="number">20</div>
+              </div>
+
+            </div>
+
+            <div class="uppercontent">
+              <div class="leftdesign" style="background-color: lightgreen"></div>
+              <div class="rightdesign">
+                closed
+                <div class="number">50</div>
+              </div>
+              
+            </div>
+
+            <div class="uppercontent">
+              <div class="leftdesign" style="background-color: lightskyblue"></div>
+              <div class="rightdesign">
+                in progress
+                <div class="number">30</div>
+              </div> 
+            </div>
+          </div>
+
         </div>
-        <div class="uppercontent">
-          <div class="leftdesign" style="background-color: lightgreen"></div>
-          <div class="rightdesign">closed</div>
-        </div>
-        <div class="uppercontent">
-          <div class="leftdesign" style="background-color: lightskyblue"></div>
-          <div class="rightdesign">in progress</div>
-        </div>
-        <div class="uppercontent">
-          <!-- <div class="leftdesign" style="background-color: lightsalmon"></div> -->
+        <!-- for chart  -->
+        <div class="rightupper">
+          <div class="numberbtwchart">100</div>
           <div class="chart">
             <canvas id="myChart"></canvas>
           </div>
         </div>
+        
       </div>
-    </div>
+    <!-- </div> -->
+
+
+    <!-- right lower for complaint show -->
     <div class="lower">
       <div>
         <form action="/userprofile" method="post">
