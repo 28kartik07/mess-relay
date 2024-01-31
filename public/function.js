@@ -94,7 +94,8 @@ const ctx = document.getElementById('myChart');
     type: 'doughnut',
     data: {
       datasets: [{
-        data: [12, 19, 3, 5, 2, 3],
+        data: [12, 19, 3],
+        backgroundColor: ['#FFA07A ', '#90EE90', '#87CEFA'],
         borderWidth: 1
       }]
     }
