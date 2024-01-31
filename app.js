@@ -8,6 +8,7 @@ const passportlocalmongoose = require("passport-local-mongoose");
 const multer = require("multer");
 const fs = require("fs");
 const app = express();
+const compression = require('compression');
 
 //storage and filename setting//
 
@@ -22,6 +23,7 @@ const upload = multer({
   storage: storage,
 });
 
+app.use(compression());
 app.set("view-engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -104,7 +106,10 @@ app.route("/").get(function (req, res) {
 app
   .route("/login")
   .get(function (req, res) {
-    res.render("login.ejs", { error: "" });
+    if(req.isAuthenticated()){
+      res.redirect("/userprofile");
+    }
+    else    res.render("login.ejs", { error: "" });
   })
   .post(function (req, res) {
     const user = new usermodel({
@@ -181,7 +186,10 @@ app
 app
   .route("/signup")
   .get(function (req, res) {
-    res.render("signup.ejs");
+    if(req.isAuthenticated()){
+      res.redirect("/userprofile");
+    }
+    else    res.render("signup.ejs");
   })
   .post(function (req, res) {
     usermodel.register(
@@ -241,16 +249,14 @@ app
     let arr=[];
     arr=req.body.likedata;
     if(arr && arr.length > 0){
-      console.log("array is : ",arr);
+      arr.forEach(i => {
+        complaintmodel
+        .updateOne({ _id: i.userid }, { $set: { upvote: i.upvote,downvote: i.downvote } })
+        .then((result) => {
+          if (!result) console.log("not updated");
+        });
+      });
     }
-    // const id = req.body.lik;
-    // if (id) {
-    //   complaintmodel
-    //     .updateOne({ _id: id }, { $inc: { upvote: 1 } })
-    //     .then((result) => {
-    //       if (!result) console.log("not updated");
-    //     });
-    // }
     var id=req.user._id;
     if (v === "All") {
       complaintmodel.find({ hostel: req.user.hostel }).then((data) => {

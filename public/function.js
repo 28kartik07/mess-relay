@@ -1,3 +1,4 @@
+let loaded=false;
 var likedata = [];
 const c="hi";
 var likebutton = document.querySelectorAll(".val");
@@ -23,6 +24,7 @@ var likebutton = document.querySelectorAll(".val");
       likes.upvote = votes;
     }
     clicks++;
+    loaded=true;
     document.getElementById("like_"+id).innerHTML = votes;
     var index = likedata.find(i => i.userid === id);
     if(index !== undefined)
@@ -36,7 +38,6 @@ var likebutton = document.querySelectorAll(".val");
   });
 }); 
 
-let loaded=false;
 
 var dislikebutton=document.querySelectorAll(".dec");
 
