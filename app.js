@@ -23,6 +23,7 @@ const upload = multer({
   storage: storage,
 });
 
+app.use(bodyparser.json());
 app.use(compression());
 app.set("view-engine", "ejs");
 app.use(express.static("public"));
@@ -86,6 +87,8 @@ const complaintschema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  like: [String],
+  dislike: [String],
   status: {
     type: String,
     default: "open",
@@ -294,18 +297,25 @@ app
     }
   })
   .post(function (req, res) {
-    const v = req.body.choose;
-    let arr=[];
-    arr=req.body.likedata;
-    if(arr && arr.length > 0){
-      arr.forEach(i => {
-        complaintmodel
-        .updateOne({ _id: i.userid }, { $set: { upvote: i.upvote,downvote: i.downvote } })
-        .then((result) => {
-          if (!result) console.log("not updated");
+    async function fetchData() {
+      let arr=[];
+      arr=req.body.likedata;
+      if(arr && arr.length > 0){
+        console.log(arr);
+        arr.forEach(i => {
+          complaintmodel
+          .updateOne({ _id: i.userid }, { $set: { upvote: i.upvote,downvote: i.downvote } , $push: {like: i.add}})
+          .then((result) => {
+            if (!result) console.log("not updated");
+          });
         });
-      });
+      }
     }
+    fetchData().then(result => {
+      if(result)     console.log("updated");
+    });
+    
+    const v = req.body.choose;  
     var id=req.user._id;
     if (v === "All") {
       complaintmodel.find({ hostel: req.user.hostel }).then((data) => {

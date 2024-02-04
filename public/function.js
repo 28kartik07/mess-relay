@@ -1,35 +1,44 @@
 let loaded=false;
 var likedata = [];
-const c="hi";
+
 var likebutton = document.querySelectorAll(".val");
 
   likebutton.forEach(function(button){
-    var clicks = 0;
     var likes = {
       userid : "",
+      add : "",
+      remove : "",
       upvote : 0
     };
   button.addEventListener("click",function(){
-    var id = button.getAttribute("data-value1");
+    var c_id = button.getAttribute("data-value1");
+    var u_id = button.getAttribute("data-value4");
     var votes = button.getAttribute("data-value2");
-    if(clicks%2 == 0)
-    {
-      likes.userid = id;
+    var arr = [];
+    arr.push(button.getAttribute("data-value3"));
+    // console.log(id);
+    // likes.userid=id;
+    var index=arr.find(i => i === u_id);
+    if(index !== undefined){
+      votes--;
+      likes.add="";
+      likes.remove=u_id;
+    }
+    else{
       votes++;
-      likes.upvote = votes;
+      likes.add=u_id;
+      likes.remove="";
     }
-    else
-    {
-      likes.userid = id;
-      likes.upvote = votes;
-    }
-    clicks++;
+    likes.userid=c_id;
+    likes.upvote=votes;
     loaded=true;
-    document.getElementById("like_"+id).innerHTML = votes;
-    var index = likedata.find(i => i.userid === id);
-    if(index !== undefined)
+    document.getElementById("like_"+c_id).innerHTML = votes;
+    var ind = likedata.find(i => i.userid === c_id);
+    if(ind !== undefined)
     {
-      index.upvote = votes;
+      ind.upvote = votes;
+      ind.add=likes.add;
+      ind.remove=likes.remove;
     }
     else
     { 
@@ -39,38 +48,37 @@ var likebutton = document.querySelectorAll(".val");
 }); 
 
 
-var dislikebutton=document.querySelectorAll(".dec");
+// var dislikebutton=document.querySelectorAll(".dec");
 
-dislikebutton.forEach(function(i){
-    var clicks=0;
-    var dislikes={
-        userid : "",
-        downvote : 0
-    };
-    i.addEventListener("click",function(){
-      var id = i.getAttribute("data-val1");
-      var votes = i.getAttribute("data-val2");
-      if(clicks%2 == 0){
-        votes++;
-      }
-      dislikes.userid=id;
-      dislikes.downvote=votes;
-      clicks++;
-      document.getElementById("dislike_"+id).innerHTML = votes;
-      loaded=true;
-      var index=likedata.find(j => j.userid===id);
-      if(index!=undefined){
-        index.downvote=votes;
-      }
-      else{
-        likedata.push(dislikes);
-      }
-      
-    });
-  });
+// dislikebutton.forEach(function(i){
+//     var clicks=0;
+//     var dislikes={
+//         userid : "",
+//         downvote : 0
+//     };
+//     i.addEventListener("click",function(){
+//       var id = i.getAttribute("data-val1");
+//       var votes = i.getAttribute("data-val2");
+//       if(clicks%2 == 0){
+//         votes++;
+//       }
+//       dislikes.userid=id;
+//       dislikes.downvote=votes;
+//       clicks++;
+//       document.getElementById("dislike_"+id).innerHTML = votes;
+//       loaded=true;
+//       var index=likedata.find(j => j.userid===id);
+//       if(index!=undefined){
+//         index.downvote=votes;
+//       }
+//       else{
+//         likedata.push(dislikes);
+//       }
+//     });
+//   });
   
-  window.addEventListener('unload', function () {
-    // Make sure dislikedata is an object with the required data
+
+  window.addEventListener('beforeunload', function () {
     if(loaded){
       console.log(likedata);
       const payload = { likedata };
