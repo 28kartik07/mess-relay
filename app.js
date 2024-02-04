@@ -136,13 +136,62 @@ app
     });
   });
 
-app.route("/adminprofile").get(function (req, res) {
+app.route("/adminprofile")
+.get(function (req, res) {
   cond = false;
   islogged = true;
   complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
     res.render("adminprofile.ejs", { complaints: data });
   });
+})
+.post(function(req,res){
+  var status = req.body.choose;
+  var a = [];
+  complaintmodel.find().then((result)=>{
+    result.forEach(function(i){
+      a.push(i);
+    });
+  }); 
+  console.log(a);
+  if(status == "all")
+  {
+    var data = [];
+    a.forEach(function(i){
+      if(i.status == "done")
+      {
+        data.push(i);
+      }
+    });
+    res.render("adminprofile.ejs",{complaints : data});
+  }
+  else if(status == "intitated")
+  {
+    var data = [];
+    a.forEach(function(i){
+      if(i.status == "notdone")
+      {
+        data.push(i);
+      }
+    });
+    res.render("adminprofile.ejs",{complaints : data});
+  }
+  else
+  {
+    var data = [];
+    a.forEach(function(i){
+      if(i.status == "inprogress")
+      {
+        data.push(i);
+      }
+    });
+    res.render("adminprofile.ejs",{complaints : data});
+  }
+
+
 });
+
+
+
 
 app
   .route("/complaint")

@@ -1,6 +1,8 @@
 <%- include('partials/header.ejs',{ hide : true,user : false }) %>
 
 <div class="main">
+
+  <!-- left side bar -->
   <div class="left">
     <div class="side">
       <a class="nav-link" href="">Attendence</a>
@@ -15,24 +17,97 @@
       <a class="nav-link" href="">information</a>
     </div>
   </div>
+
+  <!-- right whole page of the page -->
   <div class="right">
-    <div class="adminabove">
-      <div class="uppercontent">hello</div>
-      <div class="uppercontent">MM</div>
-      <div class="uppercontent">Gore</div>
-    </div>
-    <div class="lower">
-      <div class="scrollable-container">
-        <div class="llower">
-          <div class="use">User</div>
-          <div class="comp">User's Complaint</div>
+
+      <!-- upper content of the right half -->
+    <div class="upper">
+      <div class="leftupper">
+        <div class="let">
+          Complaint Overview
         </div>
+
+        <div class="dataset">
+          <div class="uppercontent">
+            <div class="leftdesign" style="background-color: lightsalmon"></div>
+            <div class="rightdesign">
+              open
+              <div class="number">20</div>
+            </div>
+
+          </div>
+
+          <div class="uppercontent">
+            <div class="leftdesign" style="background-color: lightgreen"></div>
+            <div class="rightdesign">
+              closed
+              <div class="number">50</div>
+            </div>
+            
+          </div>
+
+          <div class="uppercontent">
+            <div class="leftdesign" style="background-color: lightskyblue"></div>
+            <div class="rightdesign">
+              in progress
+              <div class="number">30</div>
+            </div> 
+          </div>
+        </div>
+
+      </div>
+      <!-- for chart  -->
+      <div class="rightupper">
+        <div class="numberbtwchart">100</div>
+        <div class="chart">
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+      
+    </div>
+   
+    <!-- lower part of the right page -->
+    <div class="lower">
+      <div class="lower-lower">
+        <div style="margin-left: 1rem;">
+          <form action="/adminprofile" method="post">
+            <button class="btn btn-light" type="submit" value="all" name="choose">complaint</button>
+          </form> 
+        </div>
+        <div style="margin-left: 1rem;">
+          <form action="/adminprofile" method="post">
+          <button class="btn btn-light" type="submit" value="initiated" name="choose">initiated</button>
+          </form>
+        </div>
+        <div style="margin-left: 1rem;">
+          <form action="/adminprofile" method="post">
+          <button class="btn btn-light" type="submit" value="completed" name="choose">completed</button>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="llower" style="background-color: rgb(250, 238, 222);;">
+        <div class="use">User</div>
+        <div class="use">User's Complaint</div>
+        <div class="init">initiate</div>
+        <div class="done">done</div>
+      </div>
+
+
+      <div class="scrollable-container" style="height: 90%;">
         <% if (complaints.length>0) { %> <% complaints.forEach(complaint => { %>
         <div class="complaints scrollable-content">
           <div class="user"><%= complaint.username %></div>
           <div class="usercomplaint"><%= complaint.complaint %></div>
-          <div class="tick1"><input type="checkbox" /></div>
-          <div class="tick2"><input type="checkbox" /></div>
+
+          <div class="tick1">
+            <input type="checkbox" value="tick1"/>
+          </div>
+          <div class="tick2">
+            <input type="checkbox" value="tick2"/>
+          </div>
         </div>
         <% }) %> <% } %>
       </div>

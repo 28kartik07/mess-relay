@@ -90,6 +90,10 @@
   height: 75%;
   padding: 2rem;
 }
+.lower-lower
+{
+  display: flex;
+}
 
 .lleft {
   width: 25%;
@@ -205,6 +209,22 @@
 .llower {
   display: flex;
 }
+.use
+{
+  width: 8rem;
+  margin-right: 3rem;
+  text-align: center;
+}
+.init
+{
+  margin-left: 14rem;
+}
+.done
+{
+  margin-left: 3.3rem;
+}
+
+
 
 
 
