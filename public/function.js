@@ -96,6 +96,48 @@ var likebutton = document.querySelectorAll(".val");
     }
   });
 
+
+  // JavaScript
+var tick1=document.querySelectorAll('#checkbox1');
+tick1.forEach(function(i){
+  // console.log(i.value);
+  var senddata=[];
+  i.addEventListener('click', function() {
+    senddata.push(i.getAttribute("data-value1"));
+    senddata.push(i.getAttribute("data-value2"));
+    sendData(senddata);
+  });
+})
+
+var tick2=document.querySelectorAll('#checkbox2');
+tick2.forEach(function(i){
+  // console.log(i.value);
+  var senddata=[];
+  i.addEventListener('click', function() {
+    senddata.push(i.getAttribute("data-value1"));
+    senddata.push(i.getAttribute("data-value2"));
+    sendData(senddata);
+  });
+})
+
+function sendData(formData) {
+
+  // Send data to the server using fetch API
+  fetch('/adminprofile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({formData}),
+  })
+  .then(data => {
+      // console.log('Data sent successfully:', data);
+  })
+  .catch(error => {
+      console.error('Error sending data to server:', error);
+  });
+}
+
 const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {

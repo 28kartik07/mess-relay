@@ -69,30 +69,24 @@
    
     <!-- lower part of the right page -->
     <div class="lower">
-      <div class="lower-lower">
-        <div style="margin-left: 1rem;">
-          <form action="/adminprofile" method="post">
-            <button class="btn btn-light" type="submit" value="all" name="choose">complaint</button>
-          </form> 
-        </div>
-        <div style="margin-left: 1rem;">
-          <form action="/adminprofile" method="post">
-          <button class="btn btn-light" type="submit" value="initiated" name="choose">initiated</button>
-          </form>
-        </div>
-        <div style="margin-left: 1rem;">
-          <form action="/adminprofile" method="post">
-          <button class="btn btn-light" type="submit" value="completed" name="choose">completed</button>
-          </form>
-        </div>
+      <div>
+        <form action="/adminprofile" method="post">
+            <button class="btn btn-light" type="submit" value="all" name="choose">Open</button>
+            <button class="btn btn-light" type="submit" value="initiated" name="choose">Initiated</button>
+            <button class="btn btn-light" type="submit" value="completed" name="choose">Completed</button>
+        </form>
       </div>
 
 
       <div class="llower" style="background-color: rgb(250, 238, 222);;">
         <div class="use">User</div>
         <div class="use">User's Complaint</div>
-        <div class="init">initiate</div>
-        <div class="done">done</div>
+        <div class="init" <% if (view!==0) { %>
+          style="display: none;"
+        <% } %>>initiate</div>
+        <div class="done" <% if (view===2) { %>
+          style="display: none;"
+        <% } %>>done</div>
       </div>
 
 
@@ -102,14 +96,21 @@
           <div class="user"><%= complaint.username %></div>
           <div class="usercomplaint"><%= complaint.complaint %></div>
 
-          <div class="tick1">
-            <input type="checkbox" value="tick1"/>
-          </div>
-          <div class="tick2">
-            <input type="checkbox" value="tick2"/>
-          </div>
+          <% if (complaint.status=="open") { %>
+            <div class="tick1">
+                <input type="checkbox" data-value1="tick1" data-value2="<%= complaint.id %>" name="solve" id="checkbox1">
+            </div> 
+          <% } %>
+          <% if (complaint.status!=="close") { %>
+              <div class="tick2">
+                <input type="checkbox"  data-value1="tick2" data-value2="<%= complaint.id %>" name="solve" id="checkbox2"/>
+              </div>
+          <% } %>
         </div>
-        <% }) %> <% } %>
+        <% }); %>
+        <% } else { %>
+          <p>No Complaint found</p>
+          <% } %>
       </div>
     </div>
   </div>
