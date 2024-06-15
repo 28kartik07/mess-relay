@@ -1,51 +1,85 @@
-let loaded=false;
-var likedata = [];
+// let loaded=false;
+var likedata = {
+  complaint_id : "",
+  likearray : [],
+};
 
 var likebutton = document.querySelectorAll(".val");
-
+  
+var arr = [];
   likebutton.forEach(function(button){
-    var likes = {
-      userid : "",
-      add : "",
-      remove : "",
-      upvote : 0
-    };
+    var flag = true;
   button.addEventListener("click",function(){
+    
     var c_id = button.getAttribute("data-value1");
     var u_id = button.getAttribute("data-value4");
     var votes = button.getAttribute("data-value2");
-    var arr = [];
-    arr.push(button.getAttribute("data-value3"));
-    // console.log(id);
-    // likes.userid=id;
-    var index=arr.find(i => i === u_id);
-    if(index !== undefined){
-      votes--;
-      likes.add="";
-      likes.remove=u_id;
-    }
-    else{
-      votes++;
-      likes.add=u_id;
-      likes.remove="";
-    }
-    likes.userid=c_id;
-    likes.upvote=votes;
-    loaded=true;
-    document.getElementById("like_"+c_id).innerHTML = votes;
-    var ind = likedata.find(i => i.userid === c_id);
-    if(ind !== undefined)
+
+    var a = JSON.parse(button.getAttribute("data-value3"));
+    if(flag == true)
     {
-      ind.upvote = votes;
-      ind.add=likes.add;
-      ind.remove=likes.remove;
+      arr = a.slice();
+      flag = false;
+    }
+    const f = arr.indexOf(u_id);
+    if(f !== -1)
+    {
+      arr.splice(f,1);
     }
     else
-    { 
-      likedata.push(likes);
+    {
+      arr.push(u_id);
     }
+    document.getElementById("like_"+c_id).innerHTML = arr.length;
+    likedata.complaint_id = c_id;
+    likedata.likearray = arr;
+    console.log(arr);
   });
+
 }); 
+
+
+// like updation logic
+
+var att = document.querySelector(".leave");
+att.addEventListener("click",function(){
+  
+  fetch('/userprofile', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(likedata)
+})
+.then(response => response.json())
+.then(data => {
+  console.log(data);
+})
+.catch(error => {
+  console.error('There was a problem with the fetch operation:', error);
+});
+
+});
+
+
+// window.addEventListener('beforeunload', function () {
+//   if(loaded){
+//     console.log(arr);
+//     const payload = {arr};
+//     console.log("hello world");
+//     // Perform the fetch operation to send data to the server
+//     fetch('/userprofile', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(payload),
+//     });
+
+//     loaded=false;
+//   }
+// });
+
 
 
 // var dislikebutton=document.querySelectorAll(".dec");
@@ -78,24 +112,9 @@ var likebutton = document.querySelectorAll(".val");
 //   });
   
 
-  window.addEventListener('beforeunload', function () {
-    if(loaded){
-      console.log(likedata);
-      const payload = { likedata };
-    
-      // Perform the fetch operation to send data to the server
-      fetch('/userprofile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+  
 
-      loaded=false;
-    }
-  });
-
+  // chart code
 const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {

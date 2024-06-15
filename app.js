@@ -87,8 +87,14 @@ const complaintschema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  like: [String],
-  dislike: [String],
+  like: {
+    type : [String],
+    default: [],
+  },
+  dislike: {
+    type : [String],
+    default: [],
+  },
   status: {
     type: String,
     default: "open",
@@ -208,7 +214,7 @@ app
   .post(upload.single("image"), function (req, res) {
     var id = req.user._id;
     var imgpath = req.file.path;
-    console.log(req.body);
+
     //converting image  to base 64 //
     const img = fs.readFileSync(imgpath, { encoding: "base64" });
 
@@ -297,23 +303,18 @@ app
     }
   })
   .post(function (req, res) {
-    async function fetchData() {
-      let arr=[];
-      arr=req.body.likedata;
-      if(arr && arr.length > 0){
-        console.log(arr);
-        arr.forEach(i => {
-          complaintmodel
-          .updateOne({ _id: i.userid }, { $set: { upvote: i.upvote,downvote: i.downvote } , $push: {like: i.add}})
-          .then((result) => {
-            if (!result) console.log("not updated");
-          });
-        });
-      }
-    }
-    fetchData().then(result => {
-      if(result)     console.log("updated");
+
+    // complete like logic update
+    const a = req.body;
+    var temp = a.complaint_id;
+    console.log(temp);
+    complaintmodel.updateOne({_id : temp},{$set : {like : a.likearray}}).then((result) => {
+      
+
+      
     });
+  
+
     
     const v = req.body.choose;  
     var id=req.user._id;

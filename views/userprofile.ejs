@@ -5,7 +5,7 @@
   <!-- side pannel  -->
   <div class="left">
     <div class="side">
-      <a class="nav-link" href="">Attendence</a>
+      <a class="nav-link leave" href="">Attendence</a>
     </div>
     <div class="side">
       <a class="nav-link" href="/complaint">complaint</a>
@@ -112,11 +112,11 @@
           </div>
           <div class="vote">
             <div>   
-              <button class="btn btn-light val" data-value1="<%= complaint.id %>" data-value2="<%= complaint.upvote %>" data-value3="<%= complaint.like %>" data-value4="<%= complaint.userid %>">
+              <button class="btn btn-light val" data-value1="<%= complaint.id %>" data-value2="<%=complaint.upvote %>" data-value3="<%=  JSON.stringify(complaint.like) %>" data-value4="<%= complaint.userid %>">
                 <img class="thumb" src="images/like.png" />
               </button>
               <div class="upvote">  
-                <h5 id="like_<%= complaint.id %>"><%= complaint.upvote %></h5>
+                <h5 id="like_<%= complaint.id %>"><%= complaint.like.length%></h5>
               </div>
             </div>
             <div>
