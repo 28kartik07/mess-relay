@@ -145,61 +145,55 @@ app
     });
   });
 
+  var view=0;
 app.route("/adminprofile")
 .get(function (req, res) {
   cond = false;
   islogged = true;
-  complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
-    res.render("adminprofile.ejs", { complaints: data });
+  complaintmodel.find({status : "open"}).then((data) => {
+    res.render("adminprofile.ejs", { complaints: data,view });
   });
 })
 .post(function(req,res){
   var status = req.body.choose;
-  var a = [];
-  complaintmodel.find().then((result)=>{
-    result.forEach(function(i){
-      a.push(i);
-    });
-  }); 
-  console.log(a);
+  var c = req.body.formData;
+  // console.log(c[1]);
+  if(c && c.length){
+    if(c[0]=="tick1"){
+      complaintmodel.updateOne({_id : c[1]},{$set: {status :"in-progress"}}).then(result=>{
+        if(!result)   console.log("data not updated");
+      });
+    }
+    else{
+      complaintmodel.updateOne({_id : c[1]},{$set: {status :"close"}}).then(result=>{
+        if(!result)   console.log("data not updated");
+      });
+    }
+    // res.redirect("/adminprofile");
+  }
+
   if(status == "all")
   {
-    var data = [];
-    a.forEach(function(i){
-      if(i.status == "done")
-      {
-        data.push(i);
-      }
+    view=0;
+    complaintmodel.find({status : "open"}).then((data)=>{
+      res.render("adminprofile.ejs",{ complaints : data,view});
     });
-    res.render("adminprofile.ejs",{complaints : data});
   }
-  else if(status == "intitated")
+  else if(status == "initiated")
   {
-    var data = [];
-    a.forEach(function(i){
-      if(i.status == "notdone")
-      {
-        data.push(i);
-      }
+    view=1;
+    complaintmodel.find({status : "in-progress"}).then((data)=>{
+      res.render("adminprofile.ejs",{ complaints : data,view});
     });
-    res.render("adminprofile.ejs",{complaints : data});
   }
   else
   {
-    var data = [];
-    a.forEach(function(i){
-      if(i.status == "inprogress")
-      {
-        data.push(i);
-      }
+    view=2;
+    complaintmodel.find({status : "close"}).then((data)=>{
+      res.render("adminprofile.ejs",{ complaints : data,view});
     });
-    res.render("adminprofile.ejs",{complaints : data});
   }
-
 });
-
-
-
 
 app
   .route("/complaint")
