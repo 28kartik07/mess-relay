@@ -196,7 +196,6 @@ app.route("/adminprofile")
     res.render("adminprofile.ejs",{complaints : data});
   }
 
-
 });
 
 
@@ -214,7 +213,7 @@ app
   .post(upload.single("image"), function (req, res) {
     var id = req.user._id;
     var imgpath = req.file.path;
-
+    console.log(imgpath);
     //converting image  to base 64 //
     const img = fs.readFileSync(imgpath, { encoding: "base64" });
 
@@ -287,6 +286,7 @@ app
   .route("/userprofile")
   .get(function (req, res) {
     cond = true;
+    // console.log("user profile get: "+req.user._id)
     if (req.isAuthenticated()) {
       var id = req.user._id;
       islogged = true;
@@ -309,13 +309,11 @@ app
     var temp = a.complaint_id;
     console.log(temp);
     complaintmodel.updateOne({_id : temp},{$set : {like : a.likearray}}).then((result) => {
-      
-
-      
+       
     });
   
 
-    
+    // console.log("user profile post: "+req.user._id)
     const v = req.body.choose;  
     var id=req.user._id;
     if (v === "All") {

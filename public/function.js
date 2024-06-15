@@ -14,7 +14,7 @@ var arr = [];
     var c_id = button.getAttribute("data-value1");
     var u_id = button.getAttribute("data-value4");
     var votes = button.getAttribute("data-value2");
-
+    localStorage.setItem("id", "efjef");
     var a = JSON.parse(button.getAttribute("data-value3"));
     if(flag == true)
     {
@@ -43,7 +43,7 @@ var arr = [];
 
 var att = document.querySelector(".leave");
 att.addEventListener("click",function(){
-  
+  console.log(localStorage.getItem("id"))
   fetch('/userprofile', {
   method: 'POST',
   headers: {
@@ -51,14 +51,14 @@ att.addEventListener("click",function(){
   },
   body: JSON.stringify(likedata)
 })
-.then(response => response.json())
-.then(data => {
-  console.log(data);
-})
-.catch(error => {
-  console.error('There was a problem with the fetch operation:', error);
-});
-
+// .then(response => response.json())
+// .then(data => {
+//   console.log(data);
+// })
+// .catch(error => {
+//   console.error('There was a problem with the fetch operation:', error);
+// });
+  console.log(a);
 });
 
 
