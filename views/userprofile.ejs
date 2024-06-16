@@ -6,6 +6,7 @@
   <div class="left">
     <div class="side">
       <a class="nav-link leave" href="">Attendence</a>
+      <a class="nav-link leave" href="">Attendence</a>
     </div>
     <div class="side">
       <a class="nav-link" href="/complaint">complaint</a>
@@ -14,7 +15,7 @@
       <a class="nav-link" href="">Your plan</a>
     </div>
     <div class="side">
-      <a class="nav-link" href="">User Menu</a>
+      <a class="nav-link" href="/menu">User Menu</a>
     </div>
     <div class="side">
       <a class="nav-link" href="">information</a>
@@ -32,13 +33,12 @@
           <div class="let">
             Complaint Overview
           </div>
-
-          <div class="dataset">
+            <div class="dataset">
             <div class="uppercontent">
               <div class="leftdesign" style="background-color: lightsalmon"></div>
               <div class="rightdesign">
-                open
-                <div class="number">20</div>
+                Open
+                <div class="number"><%= openu %></div>
               </div>
 
             </div>
@@ -46,8 +46,8 @@
             <div class="uppercontent">
               <div class="leftdesign" style="background-color: lightgreen"></div>
               <div class="rightdesign">
-                closed
-                <div class="number">50</div>
+                Closed
+                <div class="number"><%= closeu %></div>
               </div>
               
             </div>
@@ -56,7 +56,7 @@
               <div class="leftdesign" style="background-color: lightskyblue"></div>
               <div class="rightdesign">
                 in progress
-                <div class="number">30</div>
+                <div class="number"><%= inprogressu %></div>
               </div> 
             </div>
           </div>
@@ -64,7 +64,7 @@
         </div>
         <!-- for chart  -->
         <div class="rightupper">
-          <div class="numberbtwchart">100</div>
+          <div class="numberbtwchart"><%= inprogressu+closeu+openu %></div>
           <div class="chart">
             <canvas id="myChart"></canvas>
           </div>
@@ -72,7 +72,6 @@
         
       </div>
     <!-- </div> -->
-
 
     <!-- right lower for complaint show -->
     <div class="lower">
@@ -112,7 +111,7 @@
           </div>
           <div class="vote">
             <div>   
-              <button class="btn btn-light val" data-value1="<%= complaint.id %>" data-value2="<%=complaint.upvote %>" data-value3="<%=  JSON.stringify(complaint.like) %>" data-value4="<%= complaint.userid %>">
+              <button class="btn btn-light inc" data-value1="<%= complaint.id %>" data-value2="<%= complaint.upvote %>" data-value3="<%= complaint.like %>" data-value4="<%= complaint.userid %>">
                 <img class="thumb" src="images/like.png" />
               </button>
               <div class="upvote">  
@@ -120,7 +119,7 @@
               </div>
             </div>
             <div>
-              <button class="btn btn-light dec" data-val1="<%= complaint.id %>" data-val2="<%= complaint.downvote %>">
+              <button class="btn btn-light dec" data-value1="<%= complaint.id %>" data-value2="<%= complaint.downvote %>" data-value3="<%= complaint.dislike %>" data-value4="<%= complaint.userid %>">
                 <img class="thumb" src="images/dislike.png" />
               </button>
               <div class="upvote">

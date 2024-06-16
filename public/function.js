@@ -1,87 +1,116 @@
-// let loaded=false;
-var likedata = {
-  complaint_id : "",
-  likearray : [],
-};
-
-var likebutton = document.querySelectorAll(".val");
-  
-var arr = [];
+var likebutton = document.querySelectorAll(".inc");
+var likedata=[];
+var loaded=false;
   likebutton.forEach(function(button){
-    var flag = true;
+    var likes = {
+      userid : "",
+      add : "",
+      remove : "",
+      upvote : 0
+    };
   button.addEventListener("click",function(){
-    
     var c_id = button.getAttribute("data-value1");
     var u_id = button.getAttribute("data-value4");
     var votes = button.getAttribute("data-value2");
-    localStorage.setItem("id", "efjef");
-    var a = JSON.parse(button.getAttribute("data-value3"));
-    if(flag == true)
-    {
-      arr = a.slice();
-      flag = false;
-    }
-    const f = arr.indexOf(u_id);
-    if(f !== -1)
-    {
-      arr.splice(f,1);
-    }
-    else
-    {
-      arr.push(u_id);
-    }
-    document.getElementById("like_"+c_id).innerHTML = arr.length;
-    likedata.complaint_id = c_id;
-    likedata.likearray = arr;
-    console.log(arr);
-  });
+    var arr = [];
+    arr.push(button.getAttribute("data-value3"));
 
+    console.log("arr : ",arr);
+    // console.log(id);
+    // likes.userid=id;
+    var index=arr.find(i => i === u_id); 
+    console.log("u_id:", u_id);
+    console.log("index:", index);
+    if(index !== undefined){
+      console.log("decrease");
+      votes--;
+      likes.add="";
+      likes.remove=u_id;
+    }
+    else{
+      console.log("increase");
+      votes++;
+      likes.add=u_id;
+      likes.remove="";
+    }
+    likes.userid=c_id;
+    likes.upvote=votes;
+    loaded=true;
+    document.getElementById("like_"+c_id).innerHTML = votes;
+    likedata.push(likes);
+  });
 }); 
 
+window.addEventListener('beforeunload', function () {
+  if(loaded){
+    // console.log(likedata);
+    const payload = { likedata };
+  
+    // Perform the fetch operation to send data to the server
+    fetch('/userprofile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
 
-// like updation logic
-
-var att = document.querySelector(".leave");
-att.addEventListener("click",function(){
-  console.log(localStorage.getItem("id"))
-  fetch('/userprofile', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(likedata)
-})
-// .then(response => response.json())
-// .then(data => {
-//   console.log(data);
-// })
-// .catch(error => {
-//   console.error('There was a problem with the fetch operation:', error);
-// });
-  console.log(a);
+    loaded=false;
+  }
 });
+var dislikebutton = document.querySelectorAll(".dec");
 
+  dislikebutton.forEach(function(button){
+    var likes = {
+      userid : "",
+      add : "",
+      remove : "",
+      downvote : 0
+    };
+  button.addEventListener("click",function(){
+    var c_id = button.getAttribute("data-value1");
+    var u_id = button.getAttribute("data-value4");
+    var votes = button.getAttribute("data-value2");
+    var arr = [];
+    arr.push(button.getAttribute("data-value3"));
 
-// window.addEventListener('beforeunload', function () {
-//   if(loaded){
-//     console.log(arr);
-//     const payload = {arr};
-//     console.log("hello world");
-//     // Perform the fetch operation to send data to the server
-//     fetch('/userprofile', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(payload),
-//     });
+    console.log("arr : ",arr);
+    // console.log(id);
+    // likes.userid=id;
+    var index=arr.find(i => i === u_id); 
+    console.log("u_id:", u_id);
+    console.log("index:", index);
+    if(index !== undefined){
+      console.log("decrease");
+      votes--;
+      likes.add="";
+      likes.remove=u_id;
+    }
+    else{
+      console.log("increase");
+      votes++;
+      likes.add=u_id;
+      likes.remove="";
+    }
+    likes.userid=c_id;
+    likes.downvote=votes;
+    // loaded=true;
+    document.getElementById("dislike_"+c_id).innerHTML = votes;
+    var dislikedata=[];
+      dislikedata.push(likes);
+    send(dislikedata);
+  });
+}); 
 
-//     loaded=false;
-//   }
-// });
-
-
-
+function send(dislikedata){
+  fetch('/userprofile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({dislikedata}),
+  }).then((response) => response.json());
+}
 // var dislikebutton=document.querySelectorAll(".dec");
 
 // dislikebutton.forEach(function(i){
@@ -111,25 +140,7 @@ att.addEventListener("click",function(){
 //     });
 //   });
   
-
-  window.addEventListener('beforeunload', function () {
-    if(loaded){
-      console.log(likedata);
-      const payload = { likedata };
-    
-      // Perform the fetch operation to send data to the server
-      fetch('/userprofile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      loaded=false;
-    }
-  });
-
+// var
 
   // JavaScript
 var tick1=document.querySelectorAll('#checkbox1');
@@ -172,13 +183,19 @@ function sendData(formData) {
   });
 }
 
+const open=document.getElementsByClassName('number')[0].innerHTML;
+const close=document.getElementsByClassName('number')[1].innerHTML;
+const inprogress=document.getElementsByClassName('number')[2].innerHTML;
+
+// console.log(open,close,inprogress);
+
 const ctx = document.getElementById('myChart');
 
   new Chart(ctx, {
     type: 'doughnut',
     data: {
       datasets: [{
-        data: [12, 19, 3],
+        data: [open, close, inprogress],
         backgroundColor: ['#FFA07A ', '#90EE90', '#87CEFA'],
         borderWidth: 1
       }]

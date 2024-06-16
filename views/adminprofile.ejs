@@ -33,7 +33,7 @@
             <div class="leftdesign" style="background-color: lightsalmon"></div>
             <div class="rightdesign">
               open
-              <div class="number">20</div>
+              <div class="number"><%= opena %></div>
             </div>
 
           </div>
@@ -42,7 +42,7 @@
             <div class="leftdesign" style="background-color: lightgreen"></div>
             <div class="rightdesign">
               closed
-              <div class="number">50</div>
+              <div class="number"><%= closea %></div>
             </div>
             
           </div>
@@ -51,7 +51,7 @@
             <div class="leftdesign" style="background-color: lightskyblue"></div>
             <div class="rightdesign">
               in progress
-              <div class="number">30</div>
+              <div class="number"><%= inprogressa %></div>
             </div> 
           </div>
         </div>
@@ -59,7 +59,7 @@
       </div>
       <!-- for chart  -->
       <div class="rightupper">
-        <div class="numberbtwchart">100</div>
+        <div class="numberbtwchart"><%= inprogressa+closea+opena %></div>
         <div class="chart">
           <canvas id="myChart"></canvas>
         </div>
