@@ -203,8 +203,10 @@ app.route("/forgot")
         if (user) {
             // User found, return a success response
           const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
+          const time = Date.now();
           console.log(email,otp);
           req.session.otp = otp;
+          req.session.time = time;
           const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -216,8 +218,11 @@ app.route("/forgot")
           const mailOptions = {
             from: process.env.mail,
             to: email,
-            subject: 'Password Reset OTP',
-            text: `Your OTP for password reset is: ${otp}`
+            subject: 'Password Reset',
+            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+               Please use the following token within the next hour to reset your password:\n\n
+               Token: ${otp}\n\n
+               If you did not request this, please ignore this email and your password will remain unchanged.\n`
           };
 
           transporter.sendMail(mailOptions, (error, info) => {
@@ -245,17 +250,27 @@ app.route("/forgot")
 
   app.route("/verify")
   .get(function(req,res){
-    res.render('verify.ejs');
+    res.render('verify.ejs',{error:""});
   })
   .post(function(req,res){
     const entered_otp=req.body.otp;
-    const generate_otp=req.session.otp;
-    console.log(entered_otp,generate_otp);
-    if(entered_otp===generate_otp){
+    const otpTimestamp = req.session.time;
+    const otpValidityPeriod = 1 * 60 * 1000; // 1 minutes in milliseconds
+
+    console.log(entered_otp);
+    if (Date.now() - otpTimestamp > otpValidityPeriod) {
+        res.render('verify.ejs',{error:"OTP expired. Please request a new one."});
+        // res.send('OTP expired. Please request a new one.');
+    } else if (req.session.otp === entered_otp) {
         res.redirect('/reset')
+    } else {
+      res.render('verify.ejs',{error:"Invalid OTP. Please try again."});
     }
-    else
-        res.send('Invalid OTP');
+    // if(entered_otp===generate_otp){
+    //     res.redirect('/reset')
+    // }
+    // else
+    //     res.send('Invalid OTP');
   });
 
   app.route("/reset")

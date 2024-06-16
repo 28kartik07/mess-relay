@@ -2,9 +2,9 @@
   position: relative;
 }
 
-.image {
+/* .image {
   margin-right: 2rem;
-}
+} */
 
 .block {
   position: absolute;
@@ -251,3 +251,4 @@
   margin-left: 5rem;
   width: 5rem;
 }
+
