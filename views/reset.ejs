@@ -4,7 +4,7 @@
     <div class="card-header h5 text-white bg-primary">Password Reset(3/3)</div>
     <div class="card-body px-5">
         
-        <form action="/forgot" method="post">
+        <form action="/reset" method="post">
             <div class="form-outline mb-3">
                 <input
                   type="password"
@@ -30,6 +30,7 @@
                   >Re-Enter Password</label
                 >
               </div>
+              <p style="color: red"><%= error %></p>
 
             <div class="pt-1 mb-3">
               <button class="btn btn-primary" type="submit">

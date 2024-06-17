@@ -7,7 +7,7 @@ const passport = require("passport");
 const passportlocalmongoose = require("passport-local-mongoose");
 const multer = require("multer");
 // const LocalStrategy = require('passport-local').Strategy;
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const otpGenerator = require('otp-generator');
 const GoogleStrategy = require('passport-google-oauth2');
@@ -207,6 +207,7 @@ app.route("/forgot")
           console.log(email,otp);
           req.session.otp = otp;
           req.session.time = time;
+          req.session.userid=email;
           const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -266,26 +267,40 @@ app.route("/forgot")
     } else {
       res.render('verify.ejs',{error:"Invalid OTP. Please try again."});
     }
-    // if(entered_otp===generate_otp){
-    //     res.redirect('/reset')
-    // }
-    // else
-    //     res.send('Invalid OTP');
   });
 
   app.route("/reset")
   .get(function(req,res){
-    res.render('reset.ejs');
+    res.render('reset.ejs',{error:""});
   })
-  .post(function(req,res){
+  .post(async function(req,res){
     const newpassword=req.body.newpassword;
     const repassword=req.body.repassword;
     if(newpassword===repassword){
+      const username=req.session.userid;
       console.log(newpassword,repassword);
-      
+      try {
+        // Find the user by username
+        const user = await usermodel.findOne({ username });
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+    
+        // Set new password using setPassword method
+        await user.setPassword(newpassword);
+    
+        // Save the updated user object
+        await user.save();
+    
+        res.render('login.ejs',{error: "Password reset successfully!"});
+        // res.status(200).json({ message: 'Password reset successfully' });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
     }
     else{
-      res.send("Please Enter the same password!");
+      res.render('reset.ejs',{error:"Please Enter the same password!"});
     }
   });
 
@@ -310,10 +325,14 @@ app.route("/forgot")
           function (err, user) {
             if (err) {
               console.log(err);
-              res.redirect("/signup");
-            } else {
-              res.redirect("/login");
+              return res.redirect("/signup");
             }
+            passport.authenticate('local')(req, res, () => {
+              res.redirect('/login');
+            });
+            //  else {
+            //   res.redirect("/login");
+            // }
           }
       );
     });
