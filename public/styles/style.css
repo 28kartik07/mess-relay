@@ -152,9 +152,21 @@
   flex-direction: row;
 }
 .newcomplaint {
-  height: 3rem;
+  /* height: 3rem; */
   width: 65%;
+  /* width: 200px; Define the width as per your requirement */
+  /* border: 1px solid;Optional: To visualize the container */
+  padding: 10px; /* Optional: To add some padding inside the container */
+  box-sizing: border-box; 
+  margin-left: 1rem;  
 }
+
+.newcomplaint p {
+  word-wrap: break-word; /* Break long words and wrap them */
+  white-space: normal; /* Ensure normal white-space handling */
+  overflow: hidden; /* Hide overflow */
+}
+
 .vote {
   display: flex;
   justify-content: space-around;

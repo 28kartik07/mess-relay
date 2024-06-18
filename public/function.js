@@ -1,6 +1,6 @@
 var likebutton = document.querySelectorAll(".inc");
-var likedata=[];
-var loaded=false;
+// var likedata=[];
+// var loaded=false;
   likebutton.forEach(function(button){
     var likes = {
       userid : "",
@@ -12,8 +12,7 @@ var loaded=false;
     var c_id = button.getAttribute("data-value1");
     var u_id = button.getAttribute("data-value4");
     var votes = button.getAttribute("data-value2");
-    var arr = [];
-    arr.push(button.getAttribute("data-value3"));
+    var arr = button.getAttribute("data-value3").split(',');
 
     console.log("arr : ",arr);
     // console.log(id);
@@ -35,29 +34,40 @@ var loaded=false;
     }
     likes.userid=c_id;
     likes.upvote=votes;
-    loaded=true;
     document.getElementById("like_"+c_id).innerHTML = votes;
+    var likedata=[];
     likedata.push(likes);
+    likesend(likedata);
   });
 }); 
 
-window.addEventListener('beforeunload', function () {
-  if(loaded){
-    // console.log(likedata);
-    const payload = { likedata };
+function likesend(likedata){
+  fetch('/userprofile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({likedata}),
+  }).then((response) => response.json());
+}
+// window.addEventListener('beforeunload', function () {
+//   if(loaded){
+//     // console.log(likedata);
+//     const payload = { likedata };
   
-    // Perform the fetch operation to send data to the server
-    fetch('/userprofile', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }).then((response) => response.json());
+//     // Perform the fetch operation to send data to the server
+//     fetch('/userprofile', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(payload),
+//     }).then((response) => response.json());
 
-    loaded=false;
-  }
-});
+//     loaded=false;
+//   }
+// });
+
 var dislikebutton = document.querySelectorAll(".dec");
 
   dislikebutton.forEach(function(button){
@@ -71,8 +81,7 @@ var dislikebutton = document.querySelectorAll(".dec");
     var c_id = button.getAttribute("data-value1");
     var u_id = button.getAttribute("data-value4");
     var votes = button.getAttribute("data-value2");
-    var arr = [];
-    arr.push(button.getAttribute("data-value3"));
+    var arr = button.getAttribute("data-value3").split(',');
 
     console.log("arr : ",arr);
     // console.log(id);
@@ -111,37 +120,6 @@ function send(dislikedata){
     body: JSON.stringify({dislikedata}),
   }).then((response) => response.json());
 }
-// var dislikebutton=document.querySelectorAll(".dec");
-
-// dislikebutton.forEach(function(i){
-//     var clicks=0;
-//     var dislikes={
-//         userid : "",
-//         downvote : 0
-//     };
-//     i.addEventListener("click",function(){
-//       var id = i.getAttribute("data-val1");
-//       var votes = i.getAttribute("data-val2");
-//       if(clicks%2 == 0){
-//         votes++;
-//       }
-//       dislikes.userid=id;
-//       dislikes.downvote=votes;
-//       clicks++;
-//       document.getElementById("dislike_"+id).innerHTML = votes;
-//       loaded=true;
-//       var index=likedata.find(j => j.userid===id);
-//       if(index!=undefined){
-//         index.downvote=votes;
-//       }
-//       else{
-//         likedata.push(dislikes);
-//       }
-//     });
-//   });
-  
-// var
-
   // JavaScript
 var tick1=document.querySelectorAll('#checkbox1');
 tick1.forEach(function(i){
@@ -166,7 +144,7 @@ tick2.forEach(function(i){
 })
 
 function sendData(formData) {
-
+  console.log(formData);
   // Send data to the server using fetch API
   fetch('/adminprofile', {
       method: 'POST',

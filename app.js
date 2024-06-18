@@ -42,6 +42,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -350,6 +351,9 @@ app.route("/forgot")
           .then((data) => {
             openu=closeu=inprogressu=0;
             for (let i = 0; i < data.length; i++) {
+              // for(let j=0;j<data.dislike.length;j++){
+                  // console.log(data[i].dislike);
+              // }
                 if(data[i].status==="open")
                     openu++;
                 else if(data[i].status==="close")
@@ -369,8 +373,7 @@ app.route("/forgot")
     })
     .post(function (req, res) {
       async function fetchData() {
-        let arr=[];
-        arr=req.body.likedata;
+        let arr=req.body.likedata;
         if(arr && arr.length > 0){
           console.log(arr);
           arr.forEach(i => {
@@ -464,44 +467,41 @@ else
   //   res.render("adminprofile.ejs", { complaints: data,view,opena,closea,inprogressa });
   // });
 })
-.post(function(req,res){
-  var status = req.body.choose;
-  var c = req.body.formData;
-  // console.log(c[1]);
-  if(c && c.length){
-    if(c[0]=="tick1"){
-      complaintmodel.updateOne({_id : c[1]},{$set: {status :"in-progress"}}).then(result=>{
-        if(!result)   console.log("data not updated");
-      });
-    }
-    else{
-      complaintmodel.updateOne({_id : c[1]},{$set: {status :"close"}}).then(result=>{
-        if(!result)   console.log("data not updated");
-      });
-    }
-    // res.redirect("/adminprofile");
-  }
+.post(async function(req,res){
+  try {
+    var status = req.body.choose;
+    var c = req.body.formData;
+    console.log("FormData:", c);
 
-  if(status == "all")
-  {
-    view=0;
-    complaintmodel.find({status : "open"}).then((data)=>{
-      res.render("adminprofile.ejs",{ complaints : data,view,opena,closea,inprogressa});
-    });
-  }
-  else if(status == "initiated")
-  {
-    view=1;
-    complaintmodel.find({status : "in-progress"}).then((data)=>{
-      res.render("adminprofile.ejs",{ complaints : data,view,opena,closea,inprogressa});
-    });
-  }
-  else
-  {
-    view=2;
-    complaintmodel.find({status : "close"}).then((data)=>{
-      res.render("adminprofile.ejs",{ complaints : data,view,opena,closea,inprogressa});
-    });
+    if (c && c.length) {
+      let result;
+      if (c[0] === "tick1") {
+        result = await complaintmodel.updateOne({ _id: c[1] }, { $set: { status: "in-progress" } });
+      } else {
+        result = await complaintmodel.updateOne({ _id: c[1] }, { $set: { status: "close" } });
+      }
+
+      if (!result) {
+        console.log("Data not updated");
+      } 
+    }
+
+    let data;
+    if (status == "all") {
+      view=0;
+      data = await complaintmodel.find({ status: "open" });
+    } else if (status == "initiated") {
+      data = await complaintmodel.find({ status: "in-progress" });
+      view = 1;
+    } else {
+      view = 2;
+      data = await complaintmodel.find({ status: "close" });
+    }
+
+    res.render("adminprofile.ejs", { complaints: data, view, opena, closea, inprogressa });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
