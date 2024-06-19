@@ -198,16 +198,34 @@
 }
 
 .scrollable-content {
-  padding: 1rem;
+  padding: 0.5rem;
   margin: 0;
 }
 
 .user {
-  width: 15%;
+  width: 20%;
+  padding: 10px; /* Optional: To add some padding inside the container */
+  box-sizing: border-box; 
+  margin-left: 1rem;  
+}
+
+.user p {
+  word-wrap: break-word; /* Break long words and wrap them */
+  white-space: normal; /* Ensure normal white-space handling */
+  overflow: hidden; /* Hide overflow */
 }
 
 .usercomplaint {
-  width: 45%;
+  width: 55%;
+  padding: 10px; /* Optional: To add some padding inside the container */
+  box-sizing: border-box; 
+  margin-left: 1rem;  
+}
+
+.usercomplaint p {
+  word-wrap: break-word; /* Break long words and wrap them */
+  white-space: normal; /* Ensure normal white-space handling */
+  overflow: hidden; /* Hide overflow */
 }
 
 .tick1 {
@@ -223,7 +241,7 @@
 }
 .use
 {
-  width: 8rem;
+  width: 10rem;
   margin-right: 3rem;
   text-align: center;
 }
@@ -264,3 +282,31 @@
   width: 5rem;
 }
 
+
+/* detail of complaints */
+.view_complaint{
+  margin-left: 15rem;
+  width: 30rem;
+}
+
+/* details of userid */
+.profile-info {
+  margin-top: 1rem;
+} 
+
+/* mess style */
+.routine-table {
+  margin-top: 20px;
+}
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+}
+.meal-time {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+.day-column {
+  background-color: #e9ecef;
+  font-weight: bold;
+}

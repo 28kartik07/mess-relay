@@ -1,0 +1,37 @@
+<%- include('partials/header.ejs',{ hide : true,user : false }) %>
+
+<div>
+  <% if (complaints.length>0) { %> <% complaints.forEach(complaint => { %>
+  <div class="card shadow-sm view_complaint">
+    <img class="card-img-top" src="data:image/jpeg;base64,<%= complaint.img64 %>" alt="Card image cap">
+    <div class="card-body">
+      <p class="card-title"><strong>Username :- </strong><%= complaint.username %></p>
+      <p class="card-text"><strong>Complaint :- </strong><%= complaint.complaint %></p>
+      <p class="card-text"><strong>User's Hostel :- </strong><%= complaint.hostel %></p>
+      <p class="card-text"><strong>complaint's Upvote :- </strong><%= complaint.upvote %></p>
+      <p class="card-text"><strong>complaint's Downvote :- </strong><%= complaint.downvote %></p>
+      <% if (complaint.status==="open") { %>
+        <form action="/adminprofile" method="POST">
+          <input type="hidden" name="choose" value="tick1">
+          <input type="hidden" name="c_id" value="<%= complaint.id %>">
+          <p class="card-text"><strong>Change complaint status to in-progress :- </strong>
+            <button type="submit" class="btn btn-primary">Change</button>
+          </p>
+        </form>
+      <% } %>
+      <% if (complaint.status!=="close") { %>
+        <form action="/adminprofile" method="POST">
+          <input type="hidden" name="choose" value="tick2">
+          <input type="hidden" name="c_id" value="<%= complaint.id %>">
+          <p class="card-text"><strong>Change complaint status to done :- </strong>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Change</button>
+          </p>        
+        </form>
+      <% } %>
+    </div>
+  </div>
+  <% }); %>
+  <% } else { %>
+    <p>No Complaint found</p>
+    <% } %>
+</div>

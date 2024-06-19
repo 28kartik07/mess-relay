@@ -14,7 +14,7 @@
       <a class="nav-link" href="">Change Menu</a>
     </div>
     <div class="side">
-      <a class="nav-link" href="">information</a>
+      <a class="nav-link" href="">Admin's information</a>
     </div>
   </div>
 
@@ -66,7 +66,7 @@
       </div>
       
     </div>
-   
+    
     <!-- lower part of the right page -->
     <div class="lower">
       <div>
@@ -81,31 +81,28 @@
       <div class="llower" style="background-color: rgb(250, 238, 222);;">
         <div class="use">User</div>
         <div class="use">User's Complaint</div>
-        <div class="init" <% if (view!==0) { %>
-          style="display: none;"
-        <% } %>>initiate</div>
-        <div class="done" <% if (view===2) { %>
-          style="display: none;"
-        <% } %>>done</div>
       </div>
 
 
       <div class="scrollable-container" style="height: 90%;">
         <% if (complaints.length>0) { %> <% complaints.forEach(complaint => { %>
         <div class="complaints scrollable-content">
-          <div class="user"><%= complaint.username %></div>
-          <div class="usercomplaint"><%= complaint.complaint %></div>
+          <div class="user">
+            <div>
+              <p><%= complaint.username %></p>
+            </div>
+          </div>
+          <div class="usercomplaint">
+            <div>
+              <p><%= complaint.complaint %></p>
+            </div>
+          </div>
 
-          <% if (complaint.status=="open") { %>
-            <div class="tick1">
-                <input type="checkbox" data-value1="tick1" data-value2="<%= complaint.id %>" name="solve" id="checkbox1">
-            </div> 
-          <% } %>
-          <% if (complaint.status!=="close") { %>
-              <div class="tick2">
-                <input type="checkbox"  data-value1="tick2" data-value2="<%= complaint.id %>" name="solve" id="checkbox2"/>
-              </div>
-          <% } %>
+          <form action="/detail" method="POST">
+            <input type="hidden" name="userId" value="<%= complaint.id %>">
+            <button type="submit" class="btn btn-primary" style="height: 3rem; margin-top: 1rem; margin-left: 1rem;">View Details</button>
+          </form>
+            
         </div>
         <% }); %>
         <% } else { %>

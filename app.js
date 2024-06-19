@@ -435,8 +435,18 @@ app.route("/forgot")
       }
     });
     
+app.route("/information")
+  .get(function(req,res){
+      if(req.isAuthenticated()){
+        usermodel.find({_id : req.user._id}).then((data) => {
+          // console.log(data);
+          res.render("information.ejs",{user: data});
+        });
+      }
+      else  res.render('login.ejs',{error:"Login to see information of User!"});
+    });
+
 let opena,closea,inprogressa;
-var view=0;
 app.route("/adminprofile")
 .get(function (req, res) {
   if(req.isAuthenticated()){
@@ -455,7 +465,7 @@ app.route("/adminprofile")
     return complaintmodel.find({ status: "open" });
   }).then((openComplaints) => {
       // Render admin profile with data from both find operations
-      res.render("adminprofile.ejs", { complaints: openComplaints, view, opena, closea, inprogressa });
+      res.render("adminprofile.ejs", { complaints: openComplaints, opena, closea, inprogressa });
   }).catch((error) => {
       console.error(error);
   });
@@ -470,44 +480,59 @@ else
 .post(async function(req,res){
   try {
     var status = req.body.choose;
-    var c = req.body.formData;
-    console.log("FormData:", c);
-
-    if (c && c.length) {
       let result;
-      if (c[0] === "tick1") {
-        result = await complaintmodel.updateOne({ _id: c[1] }, { $set: { status: "in-progress" } });
-      } else {
-        result = await complaintmodel.updateOne({ _id: c[1] }, { $set: { status: "close" } });
+      if (req.body.choose === "tick1") {
+        result = await complaintmodel.updateOne({ _id: req.body.c_id }, { $set: { status: "in-progress" } });
+      } 
+      else if(req.body.choose==="tick2"){
+        result = await complaintmodel.updateOne({ _id:  req.body.c_id }, { $set: { status: "close" } });
       }
 
       if (!result) {
         console.log("Data not updated");
       } 
-    }
 
     let data;
     if (status == "all") {
-      view=0;
       data = await complaintmodel.find({ status: "open" });
     } else if (status == "initiated") {
       data = await complaintmodel.find({ status: "in-progress" });
-      view = 1;
     } else {
-      view = 2;
       data = await complaintmodel.find({ status: "close" });
     }
 
-    res.render("adminprofile.ejs", { complaints: data, view, opena, closea, inprogressa });
+    res.render("adminprofile.ejs", { complaints: data, opena, closea, inprogressa });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
+app.route("/detail")
+  .get(function(req,res){
+      if(req.isAuthenticated()){
+        res.render("detail.ejs",{complaint:""});
+      }
+      else  res.render('login.ejs',{error:"Login to see Detail of Complaint!"});
+  })
+  .post(function(req,res){
+    if(req.isAuthenticated()){
+      const f=req.body.userId;
+      console.log(f);
+      complaintmodel.find({_id:f}).then((data) => {
+          // console.log(data);
+            res.render("detail.ejs",{complaints: data});
+        });
+    }
+    else  res.render('login.ejs',{error:"Login to see Detail of Complaint!"});
+  });
+
 app.route("/menu")
   .get(function (req,res){
+    if(req.isAuthenticated()){
       res.render("menu.ejs");
+    }
+    else  res.render('login.ejs',{error:"Login to see Menu!"});
   });
 
 app
