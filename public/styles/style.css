@@ -151,9 +151,10 @@
   display: flex;
   flex-direction: row;
 }
+
 .newcomplaint {
   /* height: 3rem; */
-  width: 65%;
+  width: 55%;
   /* width: 200px; Define the width as per your requirement */
   /* border: 1px solid;Optional: To visualize the container */
   padding: 10px; /* Optional: To add some padding inside the container */
@@ -295,18 +296,67 @@
 } 
 
 /* mess style */
-.routine-table {
-  margin-top: 20px;
+
+.menu{
+  font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
 }
-.table th, .table td {
-  text-align: center;
+
+.menu_top{
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #fff;
+}
+
+table, th, td {
   vertical-align: middle;
+  text-align: center;
+  border: 1px solid #ccc;
 }
-.meal-time {
-  background-color: #f8f9fa;
-  font-weight: bold;
+
+th, td {
+  padding: 10px;
+  text-align: left;
 }
-.day-column {
-  background-color: #e9ecef;
-  font-weight: bold;
+
+.menu_form{
+  background-color: #fff;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+}
+
+.menu_form label {
+  display: block;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.menu_form input, .menu_form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.menu_form button {
+  padding: 10px 20px;
+  background-color: #5cb85c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu_form button:hover {
+  background-color: #4cae4c;
 }

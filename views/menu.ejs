@@ -1,67 +1,57 @@
-<%- include('partials/header.ejs',{ hide : true ,user : true}) %>
+<% if (isAdmin) { %>
+    <%- include('partials/header.ejs',{ hide : true ,user : false}) %>
+<% } else { %>
+    <%- include('partials/header.ejs',{ hide : true ,user : true}) %> 
+<% } %>
 
-<div class="container">
-    <h1 class="text-center my-4">Mess Routine</h1>
-    <table class="table table-bordered routine-table">
+<div class="menu">
+  <h1 class="text-center my-4 menu_top">Mess Routine</h1>
+  <table>
       <thead>
-        <tr>
-          <th scope="col">Day</th>
-          <th scope="col">Breakfast</th>
-          <th scope="col">Lunch</th>
-          <th scope="col">Snacks</th>
-          <th scope="col">Dinner</th>
-        </tr>
+          <tr>
+              <th>Day</th>
+              <th>Breakfast</th>
+              <th>Lunch</th>
+              <th>Dinner</th>
+          </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row" class="day-column">Monday</th>
-          <td>Pancakes</td>
-          <td>Grilled Chicken</td>
-          <td>Samosa</td>
-          <td>Spaghetti</td>
-        </tr>
-        <tr>
-          <th scope="row" class="day-column">Tuesday</th>
-          <td>Omelette</td>
-          <td>Fish Curry</td>
-          <td>Fruit Salad</td>
-          <td>Butter Chicken</td>
-        </tr>
-        <tr>
-          <th scope="row" class="day-column">Wednesday</th>
-          <td>French Toast</td>
-          <td>Veg Biryani</td>
-          <td>Spring Rolls</td>
-          <td>Paneer Butter Masala</td>
-        </tr>
-        <tr>
-          <th scope="row" class="day-column">Thursday</th>
-          <td>Idli</td>
-          <td>Chole Bhature</td>
-          <td>Cookies</td>
-          <td>Pizza</td>
-        </tr>
-        <tr>
-          <th scope="row" class="day-column">Friday</th>
-          <td>Paratha</td>
-          <td>Chicken Biryani</td>
-          <td>Ice Cream</td>
-          <td>Grilled Fish</td>
-        </tr>
-        <tr>
-          <th scope="row" class="day-column">Saturday</th>
-          <td>Poori Bhaji</td>
-          <td>Dal Makhani</td>
-          <td>Nachos</td>
-          <td>Burger</td>
-        </tr>
-        <tr>
-          <th scope="row" class="day-column">Sunday</th>
-          <td>Pancakes</td>
-          <td>Butter Chicken</td>
-          <td>Pastries</td>
-          <td>Chinese Noodles</td>
-        </tr>
+          <% routine.forEach(item => { %>
+              <tr>
+                  <td><%= item.day %></td>
+                  <td><%= item.breakfast %></td>
+                  <td><%= item.lunch %></td>
+                  <td><%= item.dinner %></td>
+              </tr>
+          <% }) %>
       </tbody>
-    </table>
+  </table>
+  
+    <% if (isAdmin) { %>
+      <h2 class="text-center my-4 menu_top">Update Routine</h2>
+      <form action="/update-mess-routine" method="POST" class="menu_form">
+          <label for="day">Day:</label>
+          <select name="day" id="day">
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+              <option value="Sunday">Sunday</option>
+          </select>
+          
+          <label for="breakfast">Breakfast:</label>
+          <input type="text" name="breakfast" id="breakfast" required>
+          
+          <label for="lunch">Lunch:</label>
+          <input type="text" name="lunch" id="lunch" required>
+          
+          <label for="dinner">Dinner:</label>
+          <input type="text" name="dinner" id="dinner" required>
+          
+          <button type="submit">Update</button>
+      </form>
+    <% } %>
+    
   </div>

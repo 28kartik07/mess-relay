@@ -53,6 +53,15 @@ mongoose
   .then(() => console.log("mongo connected"))
   .catch((err) => console.log(err));
 
+const messRoutineSchema = new mongoose.Schema({
+    day: { type: String, required: true },       
+    breakfast: { type: String, required: true }, 
+    lunch: { type: String, required: true },     
+    dinner: { type: String, required: true }
+});
+
+const messmodel = mongoose.model("messRoutine", messRoutineSchema);
+
 const userschema = new mongoose.Schema({
   username: String,
   password: String,
@@ -434,7 +443,9 @@ app.route("/forgot")
         });
       }
     });
+
     
+// -----------user_inforation---------------------------------------------
 app.route("/information")
   .get(function(req,res){
       if(req.isAuthenticated()){
@@ -445,6 +456,8 @@ app.route("/information")
       }
       else  res.render('login.ejs',{error:"Login to see information of User!"});
     });
+
+// ======================adminprofile=================================
 
 let opena,closea,inprogressa;
 app.route("/adminprofile")
@@ -482,10 +495,14 @@ else
     var status = req.body.choose;
       let result;
       if (req.body.choose === "tick1") {
-        result = await complaintmodel.updateOne({ _id: req.body.c_id }, { $set: { status: "in-progress" } });
+        opena--;
+        inprogressa++;
+        result = await complaintmodel.findOneAndUpdate({ _id: req.body.c_id }, { $set: { status: "in-progress" } });
       } 
       else if(req.body.choose==="tick2"){
-        result = await complaintmodel.updateOne({ _id:  req.body.c_id }, { $set: { status: "close" } });
+        inprogressa--;
+        closea++;
+        result = await complaintmodel.findOneAndUpdate({ _id:  req.body.c_id }, { $set: { status: "close" } });
       }
 
       if (!result) {
@@ -527,15 +544,47 @@ app.route("/detail")
     else  res.render('login.ejs',{error:"Login to see Detail of Complaint!"});
   });
 
+
+// ==================menu============================================
+
+var isAdmin=0;
 app.route("/menu")
-  .get(function (req,res){
+  .get(async function (req,res){
     if(req.isAuthenticated()){
-      res.render("menu.ejs");
+      try {
+        const routine = await messmodel.find();
+        console.log(req.user.role);
+        if(req.user.role==="admin"){
+          isAdmin=1;
+        }
+        else  isAdmin=0;
+        res.render("menu.ejs",{ routine,isAdmin });
+      } catch (err) {
+          res.status(500).send("Error fetching mess routine");
+      }
     }
     else  res.render('login.ejs',{error:"Login to see Menu!"});
   });
 
-app
+
+  app.post('/update-mess-routine', async (req, res) => {
+    const { day, breakfast, lunch, dinner } = req.body;
+
+    try {
+        await messmodel.findOneAndUpdate({ day }, { breakfast, lunch, dinner }, { upsert: true });
+        const routine = await messmodel.find();
+        if(req.user.role==="admin"){
+          isAdmin=1;
+        }
+        res.render("menu.ejs",{ routine,isAdmin });
+    } catch (err) {
+        res.status(500).send("Error updating mess routine");
+    }
+});
+  
+  // =======================complaint===========================================
+  
+  app
   .route("/complaint")
   .get(function (req, res) {
     if (req.isAuthenticated()) {
@@ -550,7 +599,7 @@ app
     console.log(imgpath);
     //converting image  to base 64 //
     const img = fs.readFileSync(imgpath, { encoding: "base64" });
-
+    
     usermodel
       .updateOne({ _id: id }, { $inc: { tcomplaint: 1 } })
       .then((result) => {
@@ -567,19 +616,19 @@ app
       image: req.file.filename,
       img64: img,
     });
-
+    
     c.save().then(() => {
       fs.unlinkSync(imgpath);
       res.redirect("/userprofile");
     });
   });
-
-app.get("/logout", (req, res) => {
-  // Destroy the session to log out the user
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error destroying session:", err);
-      res.status(500).send("Internal Server Error");
+  
+  app.get("/logout", (req, res) => {
+    // Destroy the session to log out the user
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        res.status(500).send("Internal Server Error");
     } else {
       islogged = false;
       res.redirect("/login"); // Redirect to the login page after logout
@@ -601,9 +650,9 @@ app.listen("3000", function (req, res) {
 });
 
 // usermodel.register(
-//   {
-//     username: "gore@gmail.com",
-//     name: "gore lal",
+  //   {
+    //     username: "gore@gmail.com",
+    //     name: "gore lal",
 //     registration: "xxxx",
 //     hostel: "raman",
 //     gender: "male",
@@ -611,9 +660,31 @@ app.listen("3000", function (req, res) {
 //   },
 //   "gore",
 //   (err, user) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).json({ error: "Error registering user" });
-//     }
-//   }
-// );
+  //     if (err) {
+    //       console.error(err);
+    //       return res.status(500).json({ error: "Error registering user" });
+    //     }
+    //   }
+    // );
+
+    //------------------ mess routine ---------------
+
+    //   const routines = [
+    //     { day: "Monday", breakfast: "Pancakes", lunch: "Pasta", dinner: "Pizza" },
+    //     { day: "Tuesday", breakfast: "Omelette", lunch: "Biryani", dinner: "Burger" },
+    //     { day: "Wednesday", breakfast: "Cereal", lunch: "Tacos", dinner: "Steak" },
+    //     { day: "Thursday", breakfast: "Waffles", lunch: "Salad", dinner: "Chicken" },
+    //     { day: "Friday", breakfast: "Toast", lunch: "Sandwich", dinner: "Fish" },
+    //     { day: "Saturday", breakfast: "Fruit", lunch: "Sushi", dinner: "BBQ" },
+    //     { day: "Sunday", breakfast: "Bagels", lunch: "Pizza", dinner: "Soup" }
+    // ];
+    
+    // routines.forEach(async (routine) => {
+    //     const newRoutine = new messmodel(routine);
+    //     try {
+    //         await newRoutine.save();
+    //         console.log(`${routine.day} routine saved!`);
+    //     } catch (error) {
+    //         console.error(`Error saving ${routine.day} routine:`, error);
+    //     }
+    // });
