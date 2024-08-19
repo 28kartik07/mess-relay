@@ -161,6 +161,8 @@ let cond = true;
 let islogged = false;
 
 app.route("/").get(function (req, res) {
+  // console.log(req.session.user);
+  islogged = req.isAuthenticated()? true : false;
   res.render("home.ejs", { islogged, cond });
 });
 
@@ -168,11 +170,12 @@ app
   .route("/login")
   .get(function (req, res) {
     if(req.isAuthenticated()){
+      // req.session.user = user;
       res.redirect("/userprofile");
     }
     else{    
       res.render("login.ejs", { error: "" });
-  }
+   }
   })
   .post(function (req, res) {
     const user = new usermodel({
@@ -347,22 +350,29 @@ app.route("/forgot")
       );
     });
   
+  app.route("/attendence")
+    .get(function(req,res){
+      if(req.isAuthenticated()){
+        res.render("attendence.ejs");
+      }
+    });
+
+// ----------------------------userprofile-----------------------------------------
+
     let openu,closeu,inprogressu;
     app
     .route("/userprofile")
     .get(function (req, res) {
       cond = true;
       if (req.isAuthenticated()) {
+        // console.log("User authenticated:", req.user);
         var id = req.user._id;
-        islogged = true;
+        // islogged = true;
         complaintmodel
           .find({ userid: id })
           .then((data) => {
             openu=closeu=inprogressu=0;
             for (let i = 0; i < data.length; i++) {
-              // for(let j=0;j<data.dislike.length;j++){
-                  // console.log(data[i].dislike);
-              // }
                 if(data[i].status==="open")
                     openu++;
                 else if(data[i].status==="close")
@@ -371,7 +381,7 @@ app.route("/forgot")
                     inprogressu++;
             }
             // console.log(data);
-            res.render("userprofile.ejs", { complaints: data,openu,closeu,inprogressu });
+            res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
           })
           .catch((error) => {
             console.error(error);
@@ -435,11 +445,30 @@ app.route("/forgot")
       var id=req.user._id;
       if (v === "All") {
         complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
-          res.render("userprofile.ejs", { complaints: data,openu,closeu,inprogressu });
+          // console.log(data);
+          openu = 0, closeu = 0, inprogressu = 0;
+          // console.log(id);
+          for (let i = 0; i < data.length; i++) {
+              // console.log(data[i].userid);
+              if(data[i].userid.toString() === id.toString()){
+                  if (data[i].status === "open") openu++;
+                  else if (data[i].status === "close") closeu++;
+                  else inprogressu++;
+              }
+          }
+          res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
         });
       } else {
         complaintmodel.find({ userid: id }).then((data) => {
-          res.render("userprofile.ejs", { complaints: data,openu,closeu,inprogressu });
+          // console.log(data);
+          openu = 0, closeu = 0, inprogressu = 0;
+          for (let i = 0; i < data.length; i++) {
+              if (data[i].status === "open") openu++;
+              else if (data[i].status === "close") closeu++;
+              else inprogressu++;
+          }
+          // openu=closeu=inprogressu=6;
+          res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
         });
       }
     });
