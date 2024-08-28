@@ -397,7 +397,10 @@ app.route("/forgot")
           console.log(arr);
           arr.forEach(i => {
             const update = {
-              $set: { upvote: i.upvote }
+              $set: { 
+                  downvote: i.downvote, 
+                  upvote: i.upvote 
+              }
             };
             
             if (i.add && i.add.length > 0) {
@@ -407,6 +410,11 @@ app.route("/forgot")
             if (i.remove && i.remove.length > 0) {
               update.$pull = { like: i.remove };
             }
+
+            if (i.disremove && i.disremove.length > 0) {
+              update.$pull = { dislike: i.disremove };
+            }
+
             complaintmodel
             .updateOne({ _id: i.userid },update)
             .then((result) => {
@@ -423,8 +431,14 @@ app.route("/forgot")
       if(a && a.length > 0){
         console.log(a);
         a.forEach(i => {
+          // const update = {
+          //   $set: {  downvote: i.downvote }
+          // };
           const update = {
-            $set: {  downvote: i.downvote }
+            $set: { 
+                downvote: i.downvote, 
+                upvote: i.upvote 
+            }
           };
           
           if (i.add && i.add.length > 0) {
@@ -434,6 +448,11 @@ app.route("/forgot")
           if (i.remove && i.remove.length > 0) {
             update.$pull = { dislike: i.remove };
           }
+
+          if (i.likeremove && i.likeremove.length > 0) {
+            update.$pull = { like: i.likeremove };
+          }
+
           complaintmodel
           .updateOne({ _id: i.userid },update)
           .then((result) => {
