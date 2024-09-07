@@ -544,11 +544,15 @@ else
       let result;
       if (req.body.choose === "tick1") {
         opena--;
+        if(opena<0)
+            opena=0;
         inprogressa++;
         result = await complaintmodel.findOneAndUpdate({ _id: req.body.c_id }, { $set: { status: "in-progress" } });
       } 
       else if(req.body.choose==="tick2"){
         inprogressa--;
+        if(inprogressa<0)
+            inprogressa=0;
         closea++;
         result = await complaintmodel.findOneAndUpdate({ _id:  req.body.c_id }, { $set: { status: "close" } });
       }

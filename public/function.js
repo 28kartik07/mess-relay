@@ -182,46 +182,6 @@ dislikebutton.forEach(function(button) {
     send(dislikedata);
   });
 });
-//   dislikebutton.forEach(function(button){
-//     var likes = {
-//       userid : "",
-//       add : "",
-//       remove : "",
-//       downvote : 0
-//     };
-//   button.addEventListener("click",function(){
-//     var c_id = button.getAttribute("data-value1");
-//     var u_id = button.getAttribute("data-value4");
-//     var votes = button.getAttribute("data-value2");
-//     var arr = button.getAttribute("data-value3").split(',');
-
-//     console.log("arr : ",arr);
-//     // console.log(id);
-//     // likes.userid=id;
-//     var index=arr.find(i => i === u_id); 
-//     console.log("u_id:", u_id);
-//     console.log("index:", index);
-//     if(index !== undefined){
-//       console.log("decrease");
-//       votes--;
-//       likes.add="";
-//       likes.remove=u_id;
-//     }
-//     else{
-//       console.log("increase");
-//       votes++;
-//       likes.add=u_id;
-//       likes.remove="";
-//     }
-//     likes.userid=c_id;
-//     likes.downvote=votes;
-//     // loaded=true;
-//     document.getElementById("dislike_"+c_id).innerHTML = votes;
-//     var dislikedata=[];
-//       dislikedata.push(likes);
-//     send(dislikedata);
-//   });
-// }); 
 
 function send(dislikedata){
   fetch('/userprofile', {
