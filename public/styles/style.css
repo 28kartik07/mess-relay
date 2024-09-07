@@ -31,7 +31,7 @@
 }
 .left {
   width: 15%;
-  background-color: rgb(250, 238, 222);
+  background-color: rgb(255, 234, 195);
 }
 .right {
   width: 85%;
@@ -286,7 +286,7 @@
 
 /* detail of complaints */
 .view_complaint{
-  margin-left: 15rem;
+  /* margin-left: 17rem; */
   width: 30rem;
 }
 

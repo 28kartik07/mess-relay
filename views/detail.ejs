@@ -1,6 +1,6 @@
 <%- include('partials/header.ejs',{ hide : true,user : false }) %>
 
-<div>
+<div style="background-color: rgb(250, 229, 215); display: flex; justify-content: center; align-items: center; ">
   <% if (complaints.length>0) { %> <% complaints.forEach(complaint => { %>
   <div class="card shadow-sm view_complaint">
     <img class="card-img-top" src="data:image/jpeg;base64,<%= complaint.img64 %>" alt="Card image cap">

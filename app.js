@@ -394,7 +394,7 @@ app.route("/forgot")
       async function fetchData() {
         let arr=req.body.likedata;
         if(arr && arr.length > 0){
-          console.log(arr);
+          // console.log(arr);
           arr.forEach(i => {
             const update = {
               $set: { 
@@ -429,7 +429,7 @@ app.route("/forgot")
       });
       var a=req.body.dislikedata;
       if(a && a.length > 0){
-        console.log(a);
+        // console.log(a);
         a.forEach(i => {
           // const update = {
           //   $set: {  downvote: i.downvote }
