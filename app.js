@@ -317,6 +317,11 @@ app.route("/forgot")
     }
   });
 
+  function isValidEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
   app
     .route("/signup")
     .get(function (req, res) {
@@ -340,12 +345,15 @@ app.route("/forgot")
               console.log(err);
               return res.redirect("/signup");
             }
+
+            // if (!isValidEmail(req.body.email)) {
+            //   console.log("Invalid email format");
+            //   return res.redirect("/signup"); // Redirect or show error message
+            // }
+
             passport.authenticate('local')(req, res, () => {
               res.redirect('/login');
             });
-            //  else {
-            //   res.redirect("/login");
-            // }
           }
       );
     });
@@ -702,22 +710,22 @@ app.listen("3000", function (req, res) {
 });
 
 // usermodel.register(
-  //   {
-    //     username: "gore@gmail.com",
-    //     name: "gore lal",
+//     {
+//         username: "puneetk322003@gmail.com",
+//         name: "Puneet",
 //     registration: "xxxx",
 //     hostel: "raman",
 //     gender: "male",
 //     role: "admin",
 //   },
-//   "gore",
+//   "puneet",
 //   (err, user) => {
-  //     if (err) {
-    //       console.error(err);
-    //       return res.status(500).json({ error: "Error registering user" });
-    //     }
-    //   }
-    // );
+//       if (err) {
+//           console.error(err);
+//           return res.status(500).json({ error: "Error registering user" });
+//         }
+//       }
+//     );
 
     //------------------ mess routine ---------------
 
