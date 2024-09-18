@@ -169,13 +169,16 @@ app.route("/").get(function (req, res) {
 app
   .route("/login")
   .get(function (req, res) {
-    if(req.isAuthenticated()){
+    if(req.isAuthenticated() && req.user.role==="Student"){
       // req.session.user = user;
       res.redirect("/userprofile");
     }
+    else if(req.isAuthenticated() && req.user.role==="admin"){
+      res.redirect("/adminprofile");
+    }
     else{    
       res.render("login.ejs", { error: "" });
-   }
+    }
   })
   .post(function (req, res) {
     const user = new usermodel({
@@ -371,30 +374,34 @@ app.route("/forgot")
     app
     .route("/userprofile")
     .get(function (req, res) {
-      cond = true;
-      if (req.isAuthenticated()) {
-        // console.log("User authenticated:", req.user);
-        var id = req.user._id;
-        // islogged = true;
-        complaintmodel
-          .find({ userid: id })
-          .then((data) => {
-            openu=closeu=inprogressu=0;
-            for (let i = 0; i < data.length; i++) {
-                if(data[i].status==="open")
-                    openu++;
-                else if(data[i].status==="close")
-                    closeu++;
-                else
-                    inprogressu++;
-            }
-            // console.log(data);
-            res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      if (req.isAuthenticated()){ 
+        if(req.user.role==="Student"){
+          cond = true;
+          var id = req.user._id;
+          complaintmodel
+            .find({ userid: id })
+            .then((data) => {
+              openu=closeu=inprogressu=0;
+              for (let i = 0; i < data.length; i++) {
+                  if(data[i].status==="open")
+                      openu++;
+                  else if(data[i].status==="close")
+                      closeu++;
+                  else
+                      inprogressu++;
+              }
+              // console.log(data);
+              res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+        else{
+          res.send("Access Denied: This page is for Student only.");
+        }
       } else {
+        // res.redirect('/login');
         res.render("login.ejs", { error: "Login To View userprofile" });
       }
     })
@@ -519,32 +526,34 @@ let opena,closea,inprogressa;
 app.route("/adminprofile")
 .get(function (req, res) {
   if(req.isAuthenticated()){
-  cond = false;
-  islogged = true;
-  complaintmodel.find({}).then((data) => {
-    opena=closea=inprogressa=0;
-    for (let i = 0; i < data.length; i++) {
-        if(data[i].status==="open")
-            opena++;
-        else if(data[i].status==="close")
-            closea++;
-        else
-            inprogressa++;
+    if(req.user.role==="admin"){
+      // console.log(req.user);
+      cond = false;
+      islogged = true;
+      complaintmodel.find({}).then((data) => {
+      opena=closea=inprogressa=0;
+      for (let i = 0; i < data.length; i++) {
+          if(data[i].status==="open")
+              opena++;
+          else if(data[i].status==="close")
+              closea++;
+          else
+              inprogressa++;
+      }
+      return complaintmodel.find({ status: "open" });
+      }).then((openComplaints) => {
+          // Render admin profile with data from both find operations
+          res.render("adminprofile.ejs", { complaints: openComplaints, opena, closea, inprogressa });
+      }).catch((error) => {
+          console.error(error);
+      });
     }
-    return complaintmodel.find({ status: "open" });
-  }).then((openComplaints) => {
-      // Render admin profile with data from both find operations
-      res.render("adminprofile.ejs", { complaints: openComplaints, opena, closea, inprogressa });
-  }).catch((error) => {
-      console.error(error);
-  });
-}
-else
-    res.redirect('/login');
-  // });
-  // complaintmodel.find({status : "open"}).then((data) => {
-  //   res.render("adminprofile.ejs", { complaints: data,view,opena,closea,inprogressa });
-  // });
+    else{
+      res.send("Access Denied: This page is for Admin only.");
+    }
+  }
+  else
+    res.render("login.ejs", { error: "Login To View Adminprofile" });
 })
 .post(async function(req,res){
   try {
@@ -569,16 +578,16 @@ else
         console.log("Data not updated");
       } 
 
-    let data;
-    if (status == "all") {
-      data = await complaintmodel.find({ status: "open" });
-    } else if (status == "initiated") {
-      data = await complaintmodel.find({ status: "in-progress" });
-    } else {
-      data = await complaintmodel.find({ status: "close" });
-    }
+      let data;
+      if (status == "all") {
+        data = await complaintmodel.find({ status: "open" });
+      } else if (status == "initiated") {
+        data = await complaintmodel.find({ status: "in-progress" });
+      } else {
+        data = await complaintmodel.find({ status: "close" });
+      }
 
-    res.render("adminprofile.ejs", { complaints: data, opena, closea, inprogressa });
+      res.render("adminprofile.ejs", { complaints: data, opena, closea, inprogressa });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
