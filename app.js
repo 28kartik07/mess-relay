@@ -6,11 +6,8 @@ const session = require("express-session");
 const passport = require("passport");
 const passportlocalmongoose = require("passport-local-mongoose");
 const multer = require("multer");
-// const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const otpGenerator = require('otp-generator');
-const GoogleStrategy = require('passport-google-oauth2');
 const fs = require("fs");
 const app = express();
 
@@ -115,16 +112,17 @@ const usermodel = mongoose.model("messrecord", userschema);
 //   }
 // ));
 
-// passport.serializeUser((user, cb) => {
-//   cb(null, user);
-// });
 
-// passport.deserializeUser((user, cb) => {
-//   cb(null, user);
-// });
+passport.serializeUser(function(user, done) {
+  done(null, { id: user._id, username: user.username, role: user.role, hostel: user.hostel });
+});
 
-passport.serializeUser(usermodel.serializeUser());
-passport.deserializeUser(usermodel.deserializeUser());
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+// passport.serializeUser(usermodel.serializeUser());
+// passport.deserializeUser(usermodel.deserializeUser());
 
 passport.use(usermodel.createStrategy());
 
@@ -181,26 +179,25 @@ app
     }
   })
   .post(function (req, res) {
-    const user = new usermodel({
-      username: req.body.username,
-      password: req.body.password,
-    });
-
-    req.login(user, function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        passport.authenticate("local", function (err, user, info) {
-          if (err) console.log(err);
-          if (!user) {
-            res.render("login.ejs", { error: "Invalid user ID or Password" });
+    usermodel.findOne({ username: req.body.username }).then((user) => {
+      if (user) {
+        req.login(user, function (err) {
+          if (err) {
+            console.log(err);
           } else {
-            usermodel.find({ username: req.body.username }).then((data) => {
-              if (data[0].role === "admin") res.redirect("/adminprofile");
-              else res.redirect("/userprofile");
-            });
+            passport.authenticate("local", function (err, user, info) {
+              if (err) console.log(err);
+              if (!user) {
+                res.render("login.ejs", { error: "Invalid user ID or Password" });
+              } else {
+                usermodel.find({ username: req.body.username }).then((data) => {
+                  if (data[0].role === "admin") res.redirect("/adminprofile");
+                  else res.redirect("/userprofile");
+                });
+              }
+            })(req, res); 
           }
-        })(req, res); 
+        });
       }
     });
   });
@@ -377,7 +374,8 @@ app.route("/forgot")
       if (req.isAuthenticated()){ 
         if(req.user.role==="Student"){
           cond = true;
-          var id = req.user._id;
+          // console.log(req.user,req.user._id);
+          var id = req.user.id;
           complaintmodel
             .find({ userid: id })
             .then((data) => {
@@ -476,7 +474,7 @@ app.route("/forgot")
         });
       }
       const v = req.body.choose;  
-      var id=req.user._id;
+      var id=req.user.id;
       if (v === "All") {
         complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
           // console.log(data);
@@ -512,7 +510,7 @@ app.route("/forgot")
 app.route("/information")
   .get(function(req,res){
       if(req.isAuthenticated()){
-        usermodel.find({_id : req.user._id}).then((data) => {
+        usermodel.find({_id : req.user.id}).then((data) => {
           // console.log(data);
           res.render("information.ejs",{user: data});
         });
@@ -527,7 +525,7 @@ app.route("/adminprofile")
 .get(function (req, res) {
   if(req.isAuthenticated()){
     if(req.user.role==="admin"){
-      // console.log(req.user);
+      console.log(req.user);
       cond = false;
       islogged = true;
       complaintmodel.find({}).then((data) => {
@@ -656,14 +654,14 @@ app.route("/menu")
   app
   .route("/complaint")
   .get(function (req, res) {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() && req.user.role==="Student") {
       res.render("complaint.ejs");
     } else {
       res.render("login.ejs", { error: "Login To Add Complaint" });
     }
   })
   .post(upload.single("image"), function (req, res) {
-    var id = req.user._id;
+    var id = req.user.id;
     var imgpath = req.file.path;
     console.log(imgpath);
     //converting image  to base 64 //
