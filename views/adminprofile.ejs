@@ -29,22 +29,13 @@
         </div>
 
         <div class="dataset">
+
           <div class="uppercontent">
             <div class="leftdesign" style="background-color: lightsalmon"></div>
             <div class="rightdesign">
               open
               <div class="number"><%= opena %></div>
             </div>
-
-          </div>
-
-          <div class="uppercontent">
-            <div class="leftdesign" style="background-color: lightgreen"></div>
-            <div class="rightdesign">
-              closed
-              <div class="number"><%= closea %></div>
-            </div>
-            
           </div>
 
           <div class="uppercontent">
@@ -54,6 +45,15 @@
               <div class="number"><%= inprogressa %></div>
             </div> 
           </div>
+
+          <div class="uppercontent">
+            <div class="leftdesign" style="background-color: lightgreen"></div>
+            <div class="rightdesign">
+              closed
+              <div class="number"><%= closea %></div>
+            </div>            
+          </div>
+          
         </div>
 
       </div>
@@ -71,9 +71,9 @@
     <div class="lower">
       <div>
         <form action="/adminprofile" method="post">
-            <button class="btn btn-light" type="submit" value="all" name="choose">Open</button>
-            <button class="btn btn-light" type="submit" value="initiated" name="choose">Initiated</button>
-            <button class="btn btn-light" type="submit" value="completed" name="choose">Completed</button>
+            <button class="btn btn-light" type="submit" value="all" name="change">Open</button>
+            <button class="btn btn-light" type="submit" value="initiated" name="change">Initiated</button>
+            <button class="btn btn-light" type="submit" value="completed" name="change">Completed</button>
         </form>
       </div>
 

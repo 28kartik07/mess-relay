@@ -80,23 +80,6 @@ userschema.plugin(passportlocalmongoose);
 
 const usermodel = mongoose.model("messrecord", userschema);
 
-// app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-// app.get('/auth/google/callback',passport.authenticate("google",{
-//   successRedirect: "/adminprofile",
-//   failureRedirect: "/login",
-// })
-// );
-
-// passport.use("google",new GoogleStrategy({
-//   clientID: process.env.GOOGLE_CLIENT_ID,
-//   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//   callbackURL: 'http://localhost:3000/auth/google/callback',
-// },(accessToken, refreshToken, profile, cb) => {
-//     console.log(profile.email);
-//     return cb(null, profile.email);
-// }));
-
 // passport.use(new LocalStrategy(
 //   function(username, password, done) {
 //     usermodel.find({ username: username }).then((user) => {
@@ -111,7 +94,6 @@ const usermodel = mongoose.model("messrecord", userschema);
 //     });
 //   }
 // ));
-
 
 passport.serializeUser(function(user, done) {
   done(null, { id: user._id, username: user.username, role: user.role, hostel: user.hostel });
@@ -148,6 +130,14 @@ const complaintschema = new mongoose.Schema({
   status: {
     type: String,
     default: "open",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now, 
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now, 
   },
   image: String,
   img64: String,
@@ -199,6 +189,8 @@ app
           }
         });
       }
+      else
+          res.render("login.ejs", { error: "Please Enter Valid Data" });
     });
   });
   
@@ -217,7 +209,7 @@ app.route("/forgot")
             // User found, return a success response
           const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
           const time = Date.now();
-          console.log(email,otp);
+          // console.log(email,otp);
           req.session.otp = otp;
           req.session.time = time;
           req.session.userid=email;
@@ -234,7 +226,7 @@ app.route("/forgot")
             to: email,
             subject: 'Password Reset',
             text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-               Please use the following token within the next hour to reset your password:\n\n
+               Please use the following token within one minute to reset your password:\n\n
                Token: ${otp}\n\n
                If you did not request this, please ignore this email and your password will remain unchanged.\n`
           };
@@ -252,14 +244,12 @@ app.route("/forgot")
             
         } else {
             // User not found, return a failure response
-            res.send({ exists: false,user:"This email is not registered!" });
-            // res.send("this email is not registered!");
+            res.send("This email is not registered!");
         }
     } catch (err) {
         console.error('Error checking user', err);
         res.status(500).send('Error checking user');
     }
-
   });
 
   app.route("/verify")
@@ -271,14 +261,14 @@ app.route("/forgot")
     const otpTimestamp = req.session.time;
     const otpValidityPeriod = 1 * 60 * 1000; // 1 minutes in milliseconds
 
-    console.log(entered_otp);
+    // console.log(entered_otp);
     if (Date.now() - otpTimestamp > otpValidityPeriod) {
-        res.render('verify.ejs',{error:"OTP expired. Please request a new one."});
+        res.render('login.ejs',{error:"OTP expired. Please request a new one!"});
         // res.send('OTP expired. Please request a new one.');
     } else if (req.session.otp === entered_otp) {
         res.redirect('/reset')
     } else {
-      res.render('verify.ejs',{error:"Invalid OTP. Please try again."});
+      res.render('verify.ejs',{error:"Invalid OTP. Please try again!"});
     }
   });
 
@@ -291,7 +281,7 @@ app.route("/forgot")
     const repassword=req.body.repassword;
     if(newpassword===repassword){
       const username=req.session.userid;
-      console.log(newpassword,repassword);
+      // console.log(newpassword,repassword);
       try {
         // Find the user by username
         const user = await usermodel.findOne({ username });
@@ -305,8 +295,7 @@ app.route("/forgot")
         // Save the updated user object
         await user.save();
     
-        res.render('login.ejs',{error: "Password reset successfully!"});
-        // res.status(200).json({ message: 'Password reset successfully' });
+        res.render('login.ejs',{error: "Password reset successfully!"});       
       } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -525,7 +514,7 @@ app.route("/adminprofile")
 .get(function (req, res) {
   if(req.isAuthenticated()){
     if(req.user.role==="admin"){
-      console.log(req.user);
+      // console.log(req.user);
       cond = false;
       islogged = true;
       complaintmodel.find({}).then((data) => {
@@ -555,26 +544,28 @@ app.route("/adminprofile")
 })
 .post(async function(req,res){
   try {
-    var status = req.body.choose;
+    var status = req.body.change;
       let result;
       if (req.body.choose === "tick1") {
+        status="initiated";
         opena--;
         if(opena<0)
             opena=0;
         inprogressa++;
-        result = await complaintmodel.findOneAndUpdate({ _id: req.body.c_id }, { $set: { status: "in-progress" } });
+        result = await complaintmodel.updateOne({ _id: req.body.c_id }, { $set: { status: "in-progress",updatedAt: new Date() } });
       } 
       else if(req.body.choose==="tick2"){
+        status="completed";
         inprogressa--;
         if(inprogressa<0)
             inprogressa=0;
         closea++;
-        result = await complaintmodel.findOneAndUpdate({ _id:  req.body.c_id }, { $set: { status: "close" } });
+        result = await complaintmodel.updateOne({ _id:  req.body.c_id }, { $set: { status: "close",updatedAt: new Date() } });
       }
 
-      if (!result) {
-        console.log("Data not updated");
-      } 
+      // if (!result) {
+      //   console.log("Data not updated");
+      // } 
 
       let data;
       if (status == "all") {
@@ -584,7 +575,7 @@ app.route("/adminprofile")
       } else {
         data = await complaintmodel.find({ status: "close" });
       }
-
+      // console.log(data);
       res.render("adminprofile.ejs", { complaints: data, opena, closea, inprogressa });
   } catch (error) {
     console.error("Error:", error);
@@ -592,17 +583,24 @@ app.route("/adminprofile")
   }
 });
 
+let f;
 app.route("/detail")
   .get(function(req,res){
       if(req.isAuthenticated()){
-        res.render("detail.ejs",{complaint:""});
+        if(req.user.role==="admin"){
+          complaintmodel.find({_id:f}).then((data) => {
+            res.render("detail.ejs",{complaints: data});
+          });
+        }
+        else
+           res.send("Access Denied:This is Only for Admin!");
       }
       else  res.render('login.ejs',{error:"Login to see Detail of Complaint!"});
   })
   .post(function(req,res){
     if(req.isAuthenticated()){
-      const f=req.body.userId;
-      console.log(f);
+      f=req.body.userId;
+      // console.log(f);
       complaintmodel.find({_id:f}).then((data) => {
           // console.log(data);
             res.render("detail.ejs",{complaints: data});
@@ -620,7 +618,7 @@ app.route("/menu")
     if(req.isAuthenticated()){
       try {
         const routine = await messmodel.find();
-        console.log(req.user.role);
+        // console.log(req.user.role);
         if(req.user.role==="admin"){
           isAdmin=1;
         }
@@ -662,11 +660,14 @@ app.route("/menu")
   })
   .post(upload.single("image"), function (req, res) {
     var id = req.user.id;
-    var imgpath = req.file.path;
-    console.log(imgpath);
-    //converting image  to base 64 //
-    const img = fs.readFileSync(imgpath, { encoding: "base64" });
-    
+    var imgpath = req.file ? req.file.path : null;
+    var img = null;
+
+    if (imgpath) {
+      // console.log(imgpath);
+      img = fs.readFileSync(imgpath, { encoding: "base64" });
+    }
+
     usermodel
       .updateOne({ _id: id }, { $inc: { tcomplaint: 1 } })
       .then((result) => {
@@ -675,17 +676,23 @@ app.route("/menu")
 
     var comp = req.body.message;
     var name = req.user.username;
-    const c = new complaintmodel({
+
+    const complaintData = {
       userid: id,
       username: name,
       complaint: comp,
       hostel: req.user.hostel,
-      image: req.file.filename,
-      img64: img,
-    });
-    
+    };
+
+    if (req.file) {
+      complaintData.image = req.file.filename;
+      complaintData.img64 = img;
+    }
+
+    const c = new complaintmodel(complaintData);
+
     c.save().then(() => {
-      fs.unlinkSync(imgpath);
+      if (imgpath) fs.unlinkSync(imgpath); // Remove file only if it was uploaded
       res.redirect("/userprofile");
     });
   });

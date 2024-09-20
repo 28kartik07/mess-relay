@@ -236,8 +236,8 @@ function sendData(formData) {
 }
 
 const open=document.getElementsByClassName('number')[0].innerHTML;
-const close=document.getElementsByClassName('number')[1].innerHTML;
 const inprogress=document.getElementsByClassName('number')[2].innerHTML;
+const close=document.getElementsByClassName('number')[1].innerHTML;
 
 // console.log(open,close,inprogress);
 
@@ -247,7 +247,7 @@ const ctx = document.getElementById('myChart');
     type: 'doughnut',
     data: {
       datasets: [{
-        data: [open, close, inprogress],
+        data: [open,inprogress, close],
         backgroundColor: ['#FFA07A ', '#90EE90', '#87CEFA'],
         borderWidth: 1
       }]
