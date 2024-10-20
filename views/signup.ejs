@@ -12,7 +12,7 @@
               <h3 class="mb-4 pb-2 pb-md-0 mb-md-5" style="margin-left: 8rem">
                 Registration Form
               </h3>
-              <form action="/signup" method="post">
+              <form id="signupform" action="/signup" method="post">
                 <div class="row">
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
@@ -21,6 +21,7 @@
                         id="form3Example1c"
                         name="name"
                         class="form-control form-control"
+                        pattern="[A-Za-z ]+" title="Only letters and space are allowed" 
                         required
                       />
                       <label class="form-label" for="form3Example1c"
@@ -35,6 +36,7 @@
                         id="Registration"
                         name="registration"
                         class="form-control form-control"
+                        pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" 
                         required
                       />
                       <label class="form-label" for="Registration"
@@ -52,6 +54,8 @@
                         id="emailAddress"
                         name="username"
                         class="form-control form-control"
+                        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Email is not valid"
+                        autocomplete="email"
                         required
                       />
                       <label class="form-label" for="emailAddress">Email</label>
@@ -108,11 +112,11 @@
                     <div class="form-outline">
                       <input
                         type="password"
-                        id="form3Example4c"
+                        id="form3Example5c"
                         class="form-control"
                         required
                       />
-                      <label class="form-label" for="form3Example4c"
+                      <label class="form-label" for="form3Example5c"
                         >Repeat your Password</label
                       >
                     </div>
@@ -130,7 +134,7 @@
                     <label class="form-label select-label">Choose Hostel</label>
                   </div>
                 </div>
-
+                <span id="username-error" style="color: red; display: none;">Password and Re-password not match</span>
                 <div class="mt-4 pt-2">
                   <button class="btn btn-dark btn-lg btn-block" type="submit">
                     Register

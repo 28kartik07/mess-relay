@@ -11,19 +11,6 @@ const otpGenerator = require('otp-generator');
 const fs = require("fs");
 const app = express();
 
-//storage and filename setting//
-
-const storage = multer.diskStorage({
-  destination: "public/uploads",
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-//upload setting//
-const upload = multer({
-  storage: storage,
-});
 
 app.use(bodyparser.json());
 app.set("view-engine", "ejs");
@@ -44,48 +31,46 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 mongoose
-  .connect(
-    "mongodb+srv://ayush2022ca016:jhaaayus@cluster0.v4icccp.mongodb.net/?retryWrites=true&w=majority"
-  )
+.connect(process.env.MONGODB_URI)
   .then(() => console.log("mongo connected"))
   .catch((err) => console.log(err));
-
-const messRoutineSchema = new mongoose.Schema({
+  
+  const messRoutineSchema = new mongoose.Schema({
     day: { type: String, required: true },       
     breakfast: { type: String, required: true }, 
     lunch: { type: String, required: true },     
     dinner: { type: String, required: true }
-});
-
-const messmodel = mongoose.model("messRoutine", messRoutineSchema);
-
-const userschema = new mongoose.Schema({
-  username: String,
-  password: String,
-  registration: String,
-  name: String,
-  hostel: String,
-  gender: String,
-  role: {
-    type: String,
-    default: "Student",
-  },
-  tcomplaint: {
-    type: Number,
-    default: 0,
-  },
-});
-
-userschema.plugin(passportlocalmongoose);
-
-const usermodel = mongoose.model("messrecord", userschema);
-
-// passport.use(new LocalStrategy(
-//   function(username, password, done) {
-//     usermodel.find({ username: username }).then((user) => {
-//       // if (err) { return done(err); }
-//       if (!user) { return done(null, false, { message: 'Incorrect username.' }); }
-//       bcrypt.compare(password, user[0].salt, function(err, result) {
+  });
+  
+  const messmodel = mongoose.model("messRoutine", messRoutineSchema);
+  
+  const userschema = new mongoose.Schema({
+    username: String,
+    password: String,
+    registration: { type: String, unique: true },
+    name: String,
+    hostel: String,
+    gender: String,
+    role: {
+      type: String,
+      default: "Student",
+    },
+    tcomplaint: {
+      type: Number,
+      default: 0,
+    },
+  });
+  
+  userschema.plugin(passportlocalmongoose);
+  
+  const usermodel = mongoose.model("messrecord", userschema);
+  
+  // passport.use(new LocalStrategy(
+    //   function(username, password, done) {
+      //     usermodel.find({ username: username }).then((user) => {
+        //       // if (err) { return done(err); }
+        //       if (!user) { return done(null, false, { message: 'Incorrect username.' }); }
+        //       bcrypt.compare(password, user[0].salt, function(err, result) {
 //         if (err) { return done(err); }
 //         console.log(user[0].name);
 //         if (!result) { return done(null, false, { message: 'Incorrect password.' }); }
@@ -144,6 +129,35 @@ const complaintschema = new mongoose.Schema({
 });
 
 const complaintmodel = mongoose.model("complaints", complaintschema);
+
+//storage and filename setting//
+
+const storage = multer.diskStorage({
+  destination: "public/uploads",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  // Accept images only (mimetype for image files)
+  if (
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/gif' ||
+    file.mimetype === 'image/jpg'
+  ) {
+    cb(null, true);  // Accept the file
+  } else {
+    cb(new Error('Only image files are allowed!'), false);  // Reject the file
+  }
+};
+
+//upload setting//
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter
+});
 
 let cond = true;
 let islogged = false;
@@ -331,6 +345,16 @@ app.route("/forgot")
           req.body.password,
           function (err, user) {
             if (err) {
+              if (err.name === 'UserExistsError') {
+                console.log('User already exists with that username.');
+                return res.status(400).send('Username already exists. Please choose another username.');
+              }
+              
+              if (err.code === 11000 && err.keyPattern && err.keyPattern.registration) {
+                console.log('User already exists with that registration number.');
+                return res.status(400).send('Registration number already exists. Please use a different one.');
+              }
+        
               console.log(err);
               return res.redirect("/signup");
             }
