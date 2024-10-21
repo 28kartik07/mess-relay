@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const crypto=require("crypto");
 const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -59,6 +60,11 @@ mongoose
       type: Number,
       default: 0,
     },
+    emailVerificationToken: String,  
+    isEmailVerified: {
+      type: Boolean,
+      default: false 
+    }
   });
   
   userschema.plugin(passportlocalmongoose);
@@ -183,28 +189,42 @@ app
     }
   })
   .post(function (req, res) {
-    usermodel.findOne({ username: req.body.username }).then((user) => {
-      if (user) {
-        req.login(user, function (err) {
+    usermodel.findOne({ username: req.body.username })
+    .then((user) => {
+      if (!user) {
+        return res.render("login.ejs", { error: "Please Enter Valid Data" });
+      }
+
+      passport.authenticate("local", function (err, authenticatedUser, info) {
+        if (err) {
+          console.log(err);
+          return res.status(500).render("login.ejs", { error: "An error occurred during authentication." });
+        }
+        if (!authenticatedUser) {
+          return res.status(401).render("login.ejs", { error: "Invalid user ID or Password" });
+        }
+    
+        if (authenticatedUser.role === "user" && !authenticatedUser.isEmailVerified) {
+          return res.status(401).render("login.ejs", { error: 'Please verify your email before logging in.' });
+        }
+    
+        req.login(authenticatedUser, function (err) {
           if (err) {
             console.log(err);
+            return res.status(500).render("login.ejs", { error: "An error occurred while logging in." });
+          }
+    
+          if (authenticatedUser.role === "admin") {
+            return res.redirect("/adminprofile");
           } else {
-            passport.authenticate("local", function (err, user, info) {
-              if (err) console.log(err);
-              if (!user) {
-                res.render("login.ejs", { error: "Invalid user ID or Password" });
-              } else {
-                usermodel.find({ username: req.body.username }).then((data) => {
-                  if (data[0].role === "admin") res.redirect("/adminprofile");
-                  else res.redirect("/userprofile");
-                });
-              }
-            })(req, res); 
+            return res.redirect("/userprofile");
           }
         });
-      }
-      else
-          res.render("login.ejs", { error: "Please Enter Valid Data" });
+      })(req, res);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).render("login.ejs", { error: "An error occurred while processing your request." });
     });
   });
   
@@ -320,11 +340,6 @@ app.route("/forgot")
     }
   });
 
-  function isValidEmail(email) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  }
-
   app
     .route("/signup")
     .get(function (req, res) {
@@ -341,17 +356,18 @@ app.route("/forgot")
             registration: req.body.registration,
             hostel: req.body.hostel,
             gender: req.body.inlineRadioOptions,
+            emailVerificationToken: crypto.randomBytes(20).toString('hex'),
           },
           req.body.password,
           function (err, user) {
             if (err) {
               if (err.name === 'UserExistsError') {
-                console.log('User already exists with that username.');
+                // console.log('User already exists with that username.');
                 return res.status(400).send('Username already exists. Please choose another username.');
               }
               
               if (err.code === 11000 && err.keyPattern && err.keyPattern.registration) {
-                console.log('User already exists with that registration number.');
+                // console.log('User already exists with that registration number.');
                 return res.status(400).send('Registration number already exists. Please use a different one.');
               }
         
@@ -359,16 +375,56 @@ app.route("/forgot")
               return res.redirect("/signup");
             }
 
-            // if (!isValidEmail(req.body.email)) {
-            //   console.log("Invalid email format");
-            //   return res.redirect("/signup"); // Redirect or show error message
-            // }
-
-            passport.authenticate('local')(req, res, () => {
-              res.redirect('/login');
+            const transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: process.env.mail,
+                pass: process.env.password   
+              }
             });
+
+            const mailOptions = {
+              from: process.env.mail,
+              to: req.body.username,  
+              subject: 'Verify your email',
+              text: `Please verify your email by clicking the following link: 
+                     http://localhost:3000/verify-email?token=${user.emailVerificationToken}`  // Use token here
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.log(error);
+                return res.status(500).send('Error sending email.');
+              } else {
+                console.log('Email sent: ' + info.response);
+                res.render("login.ejs",{error: 'Please Verify your Email.'});
+              }
+            });
+        
           }
       );
+    });
+
+    app.get('/verify-email',async (req, res) => {
+      const token = req.query.token;
+    
+      try {
+        const user = await usermodel.findOne({ emailVerificationToken: token });
+    
+        if (!user) {
+          return res.status(400).send('Invalid token or token expired.');
+        }
+    
+        user.isEmailVerified = true;
+        user.emailVerificationToken = undefined;  // Clear the token after verification
+    
+        await user.save();
+    
+        res.render("login.ejs",{error: 'Email verified successfully! You can now log in.'});
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Error verifying email.');
+      }
     });
   
   app.route("/attendence")
