@@ -388,7 +388,7 @@ app.route("/forgot")
               to: req.body.username,  
               subject: 'Verify your email',
               text: `Please verify your email by clicking the following link: 
-                     http://localhost:3000/verify-email?token=${user.emailVerificationToken}`  // Use token here
+                     http://mess-relay.onrender.com//verify-email?token=${user.emailVerificationToken}`  // Use token here
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
@@ -422,7 +422,7 @@ app.route("/forgot")
     
         res.render("login.ejs",{error: 'Email verified successfully! You can now log in.'});
       } catch (err) {
-        console.error(err);
+        // console.error(err);
         res.status(500).send('Error verifying email.');
       }
     });
