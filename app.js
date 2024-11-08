@@ -32,7 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 mongoose
-.connect("mongodb+srv://ayush2022ca016:jhaaayus@cluster0.v4icccp.mongodb.net/?retryWrites=true&w=majority")
+.connect(process.env.MONGODB_URI)
   .then(() => console.log("mongo connected"))
   .catch((err) => console.log(err));
   
