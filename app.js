@@ -32,7 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 mongoose
-.connect(process.env.MONGODB_URI)
+.connect("mongodb+srv://ayush2022ca016:jhaaayus@cluster0.v4icccp.mongodb.net/?retryWrites=true&w=majority")
   .then(() => console.log("mongo connected"))
   .catch((err) => console.log(err));
   
@@ -349,6 +349,8 @@ app.route("/forgot")
       else    res.render("signup.ejs");
     })
     .post(function (req, res) {
+      // const emailToken = crypto.randomBytes(20).toString('hex'); // Plain token for the user
+      // const hashedToken = await bcrypt.hash(emailToken, 10); 
         usermodel.register(
           {
             username: req.body.username,
@@ -388,9 +390,9 @@ app.route("/forgot")
               to: req.body.username,  
               subject: 'Verify your email',
               text: `Please verify your email by clicking the following link: 
-                     http://mess-relay.onrender.com//verify-email?token=${user.emailVerificationToken}`  // Use token here
+                     http://localhost:3000/verify-email?token=${user.emailVerificationToken}`  // Use token here
             };
-
+            // http://mess-relay.onrender.com          //deploy link
             transporter.sendMail(mailOptions, function (error, info) {
               if (error) {
                 console.log(error);
