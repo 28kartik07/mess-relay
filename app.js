@@ -547,7 +547,7 @@ let dislikesection=false;
       const v = req.body.choose;  
       var id=req.user.id;
       if (v === "All") {
-        complaintmodel.find({ hostel: req.user.hostel }).then((data) => {
+        complaintmodel.find({ hostel: req.user.hostel, username: { $ne: req.user.username } }).then((data) => {
           // console.log(data);
           openu = 0, closeu = 0, inprogressu = 0;
           // console.log(id);
