@@ -204,7 +204,7 @@ app
           return res.status(401).render("login.ejs", { error: "Invalid user ID or Password" });
         }
     
-        if (authenticatedUser.role === "user" && !authenticatedUser.isEmailVerified) {
+        if (authenticatedUser.role === "Student" && !authenticatedUser.isEmailVerified) {
           return res.status(401).render("login.ejs", { error: 'Please verify your email before logging in.' });
         }
     
@@ -390,7 +390,7 @@ app.route("/forgot")
               to: req.body.username,  
               subject: 'Verify your email',
               text: `Please verify your email by clicking the following link: 
-                     http://localhost:3000/verify-email?token=${user.emailVerificationToken}`  // Use token here
+                     http://mess-relay.onrender.com/verify-email?token=${user.emailVerificationToken}`  // Use token here
             };
             // http://mess-relay.onrender.com          //deploy link
             transporter.sendMail(mailOptions, function (error, info) {
@@ -437,7 +437,7 @@ app.route("/forgot")
     });
 
 // ----------------------------userprofile-----------------------------------------
-
+let dislikesection=false;
     let openu,closeu,inprogressu;
     app
     .route("/userprofile")
@@ -460,7 +460,7 @@ app.route("/forgot")
                       inprogressu++;
               }
               // console.log(data);
-              res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
+              res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu,dislikesection });
             })
             .catch((error) => {
               console.error(error);
@@ -559,7 +559,8 @@ app.route("/forgot")
                   else inprogressu++;
               }
           }
-          res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
+          dislikesection=true;
+          res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu,dislikesection });
         });
       } else {
         complaintmodel.find({ userid: id }).then((data) => {
@@ -571,7 +572,8 @@ app.route("/forgot")
               else inprogressu++;
           }
           // openu=closeu=inprogressu=6;
-          res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu });
+          dislikesection=false;
+          res.render("userprofile.ejs", { complaints: data,id,openu,closeu,inprogressu,dislikesection });
         });
       }
     });
